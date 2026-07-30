@@ -1,0 +1,73 @@
+{
+  "ann_vol_tatasteel_2025": 0.2819004171482332,
+  "avg_close_alkem_march_2026": 5397.8421052631575,
+  "avg_close_large_cap": 1541.301735652016,
+  "avg_close_marico": 625.9236406498087,
+  "avg_close_pharma_2025": 2833.634539296509,
+  "date_max_close_bajajcon": "2026-06-19",
+  "largest_one_day_gain_ticker": "SPANDANA",
+  "max_close_tcs": 4253.90673828125,
+  "max_drawdown_spandana": -0.8495998119694506,
+  "max_range_shreecem": 2277.219951655363,
+  "mid_cap_highest_avg_volume": "LICHSGFIN",
+  "min_date": "2023-01-02",
+  "n_days_grasim_h1_2025": 123,
+  "n_days_jkpaper": 865,
+  "n_financials_instruments": 5,
+  "n_instruments": 28,
+  "n_price_rows": 24243,
+  "n_sectors": 14,
+  "n_small_cap": 9,
+  "n_up_days_hdfcbank": 434,
+  "name_of_sobha": "Sobha Ltd",
+  "nifty_return_2025": 0.10052264801196742,
+  "nifty_to_avg_close_ratio_20240628": 8.89551768201114,
+  "realty_tickers": [
+    "GODREJPROP",
+    "SOBHA"
+  ],
+  "sector_group_most_instruments": "Financials",
+  "sector_highest_avg_close": "Cement_Building",
+  "sector_of_tcs": "IT_Services",
+  "sharpe_hdfcbank": -0.17608528602484233,
+  "ticker_highest_close_ever": "SHREECEM",
+  "top3_avg_close": [
+    "SHREECEM",
+    "ALKEM",
+    "PERSISTENT"
+  ],
+  "top3_deepest_drawdown": [
+    "SPANDANA",
+    "GODREJPROP",
+    "LATENTVIEW"
+  ],
+  "top3_sectors_by_volume": [
+    "Metals_Mining",
+    "Private_Banks",
+    "Energy_OilGas"
+  ],
+  "top3_small_cap_avg_close": [
+    "RATNAMANI",
+    "TATACOMM",
+    "JBCHEPHARM"
+  ],
+  "top4_volatility_alltime": [
+    "SPANDANA",
+    "SOBHA",
+    "LATENTVIEW",
+    "JKPAPER"
+  ],
+  "top5_return_2025": [
+    "SRF",
+    "TATASTEEL",
+    "BHARTIARTL",
+    "BAJAJFINSV",
+    "BAJAJCON"
+  ],
+  "total_return_persistent_2023": 0.8543872153795753,
+  "total_return_tcs_2024": 0.09498529145712342,
+  "total_volume_it_services": 3548463117.0,
+  "total_volume_tatasteel": 31645433476.0,
+  "unanswerable": "UNANSWERABLE",
+  "worst_return_2024": "SPANDANA"
+}
