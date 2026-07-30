@@ -1,0 +1,29 @@
+ticker,name,sector,cap_tier,trading_days
+GRASIM,Grasim Industries Ltd,Cement_Building,LARGE,866
+ASIANPAINT,Asian Paints Ltd,Consumer_Durables_Retail,LARGE,866
+POWERGRID,Power Grid Corporation of India Ltd,Energy_OilGas,LARGE,866
+NESTLEIND,Nestle India Ltd,FMCG,LARGE,866
+TCS,Tata Consultancy Services Ltd,IT_Services,LARGE,866
+TATASTEEL,Tata Steel Ltd,Metals_Mining,LARGE,866
+BAJAJFINSV,Bajaj Finserv Ltd,NBFC_Insurance,LARGE,866
+SUNPHARMA,Sun Pharmaceutical Industries Ltd,Pharma_Healthcare,LARGE,866
+HDFCBANK,HDFC Bank Ltd,Private_Banks,LARGE,866
+BHARTIARTL,Bharti Airtel Ltd,Telecom,LARGE,866
+BALKRISIND,Balkrishna Industries Ltd,Auto_AutoAncillary,MID,865
+SHREECEM,Shree Cement Ltd,Cement_Building,MID,866
+SRF,SRF Ltd,Diversified_Financials_Other,MID,866
+MARICO,Marico Ltd,FMCG,MID,866
+PERSISTENT,Persistent Systems Ltd,IT_Services,MID,866
+JINDALSTEL,Jindal Steel & Power Ltd,Metals_Mining,MID,866
+LICHSGFIN,LIC Housing Finance Ltd,NBFC_Insurance,MID,866
+ALKEM,Alkem Laboratories Ltd,Pharma_Healthcare,MID,865
+GODREJPROP,Godrej Properties Ltd,Realty,MID,866
+RATNAMANI,Ratnamani Metals & Tubes Ltd,Auto_AutoAncillary,SMALL,865
+TRIVENI,Triveni Engineering & Industries Ltd,Capital_Goods_Infra,SMALL,866
+JKPAPER,JK Paper Ltd,Cement_Building,SMALL,865
+BAJAJCON,Bajaj Consumer Care Ltd,FMCG,SMALL,866
+LATENTVIEW,Latent View Analytics Ltd,IT_Services,SMALL,866
+SPANDANA,Spandana Sphoorty Financial Ltd,NBFC_Insurance,SMALL,866
+JBCHEPHARM,J.B. Chemicals & Pharmaceuticals Ltd,Pharma_Healthcare,SMALL,866
+SOBHA,Sobha Ltd,Realty,SMALL,865
+TATACOMM,Tata Communications Ltd,Telecom,SMALL,866
