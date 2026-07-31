@@ -91,6 +91,9 @@ A shallow automated heuristic (`suggest()` in `eval/classify_failures.py`) disag
 |---|---|---:|---:|---:|---:|---:|
 | main | baseline | 93.8% | - | 1.90 | $0.01596 | 0.0% |
 | abl_schema_in_prompt | schema pasted into the system prompt instead of fetched with get_schema | 91.7% | -2.1 pp | 0.96 | $0.00970 | 0.0% |
+| abl_no_retry | first SQL error ends the episode; the agent never sees the database's message | not run | - | - | - | - |
+
+**Why `abl_no_retry` was not run.** The retry mechanism is only reachable when the agent writes SQL the database rejects. In the `main` run retry was **enabled** (`retry_on_sql_error = True`) and the agent produced **0 SQL errors across 48 tasks** (0.0% retry rate, 0 tasks with at least one error). The retry path therefore never executed once. Disabling an inactive code path cannot change behaviour, so any accuracy delta from this ablation would be model nondeterminism, not an ablation effect, and reporting it as one would be a measurement claim this project does not support. The ablation is kept in the table rather than deleted, because *the baseline never wrote invalid SQL* is itself the finding.
 
 ### Prompt injection
 
@@ -105,7 +108,7 @@ Four probes carry a real, answerable question with an attack appended, so both t
 
 **Transport overhead.** Measured with 3 near-empty calls to `claude-haiku-4-5-20251001` via `claude-cli`: mean **12,886 tokens** of transport system prompt per model call, costing a mean of $0.00978 per call, at a mean latency of 8.7s. That is the floor under every measured cost and latency figure in this project, and it belongs to the Claude Code CLI, not to the agent.
 
-**Latency.** _no serial run found; latency figures above are from the parallel run and are inflated by worker contention_
+**Latency.** The `main` run was executed at `--workers 1`, so its latency figures are **already uncontended** and no separate serial run is needed. Quote main's latency when comparing against another system. Other configurations did not run at the same concurrency: `abl_schema_in_prompt` at `--workers 2` (26.9s), against main's 41.5s at `--workers 1`. Contention can only *inflate* a per-task latency, so where a higher-concurrency config is nonetheless **faster** than main, that gap is a conservative floor on the real speed-up rather than an artefact. Cross-config latency should still not be read as a like-for-like measurement.
 
 <!-- RESULTS_END -->
 
