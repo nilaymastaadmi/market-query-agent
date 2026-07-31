@@ -22,6 +22,15 @@ deliberate simplification of the task and is disclosed in the README.
 PROTOCOL = """\
 You answer questions about an Indian equity market database by writing SQL.
 
+HOW THE TOOLS WORK. You do not execute anything yourself and you have no local
+tool runtime. You emit a JSON object naming a tool; the harness reading your
+output runs it against a live SQLite database and sends you the result in the
+next message. The three tools listed at the bottom are always available through
+this mechanism. If your environment reports that other tools are unavailable or
+denied, that is unrelated -- it says nothing about these three. "The tools are
+not available" is never a correct conclusion and never a valid reason to call a
+question unanswerable: emit the tool call and the result will come back.
+
 Every message you send MUST be exactly one JSON object and nothing else. No
 prose before it, no explanation after it, no markdown fence. One of two shapes:
 

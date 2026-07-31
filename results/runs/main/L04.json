@@ -1,17 +1,17 @@
 {
   "task": {
-    "id": "L01",
+    "id": "L04",
     "tier": "lookup",
-    "answer_type": "integer",
+    "answer_type": "string",
     "tolerance": 0,
-    "question": "How many instruments are in the database?",
-    "gt_key": "n_instruments"
+    "question": "What is the registered company name of the instrument with ticker 'SOBHA'?",
+    "gt_key": "name_of_sobha"
   },
   "result": {
-    "task_id": "L01",
+    "task_id": "L04",
     "tier": "lookup",
-    "question": "How many instruments are in the database?",
-    "answer_type": "integer",
+    "question": "What is the registered company name of the instrument with ticker 'SOBHA'?",
+    "answer_type": "string",
     "config": {
       "label": "main",
       "schema_mode": "tool",
@@ -20,47 +20,47 @@
     },
     "model": "claude-haiku-4-5-20251001",
     "provider": "claude-cli",
-    "value": 28,
-    "cited_sql": "SELECT COUNT(*) FROM instruments",
+    "value": "Sobha Ltd",
+    "cited_sql": "SELECT name FROM instruments WHERE ticker = 'SOBHA'",
     "claimed_unanswerable": false,
     "refusal_reason": null,
     "outcome": "answered",
-    "steps_used": 2,
-    "tool_calls": 1,
-    "sql_calls": 0,
+    "steps_used": 3,
+    "tool_calls": 2,
+    "sql_calls": 1,
     "sql_errors": 0,
     "blocked_calls": 0,
     "retries": 0,
     "protocol_violations": 0,
     "transport_retries": 0,
     "rate_limit_hits": 0,
-    "prompt_tokens": 2203,
-    "completion_tokens": 912,
-    "cache_write_tokens": 4021,
-    "cache_read_tokens": 54026,
-    "cost_usd_measured": 0.0202076,
-    "cost_usd_agent": 0.006763,
-    "cost_usd_cache": 0.013444600000000001,
-    "latency_s": 23.26175705,
-    "llm_latency_s": 23.25670377099999,
+    "prompt_tokens": 3941,
+    "completion_tokens": 1298,
+    "cache_write_tokens": 5199,
+    "cache_read_tokens": 82182,
+    "cost_usd_measured": 0.029047200000000002,
+    "cost_usd_agent": 0.010431,
+    "cost_usd_cache": 0.0186162,
+    "latency_s": 33.455773045,
+    "llm_latency_s": 33.450924929999985,
     "error": null,
     "transcript": [
       {
         "step": 1,
         "llm": {
-          "text": "{\"thought\": \"Need to understand the database schema first\", \"tool\": \"get_schema\", \"args\": {}}",
+          "text": "{\"thought\": \"Need to get the database schema first to find the table structure\", \"tool\": \"get_schema\", \"args\": {}}",
           "model": "claude-haiku-4-5-20251001",
-          "prompt_tokens": 560,
-          "completion_tokens": 277,
-          "cache_write_tokens": 1892,
-          "cache_read_tokens": 25989,
-          "cost_usd_measured": 0.008327900000000001,
-          "cost_usd_agent": 0.001945,
-          "latency_s": 11.582243184999982,
+          "prompt_tokens": 578,
+          "completion_tokens": 484,
+          "cache_write_tokens": 1158,
+          "cache_read_tokens": 41048,
+          "cost_usd_measured": 0.009418800000000001,
+          "cost_usd_agent": 0.002998,
+          "latency_s": 11.36013254400001,
           "error": null
         },
         "parsed": {
-          "thought": "Need to understand the database schema first",
+          "thought": "Need to get the database schema first to find the table structure",
           "tool": "get_schema",
           "args": {}
         },
@@ -71,22 +71,55 @@
       {
         "step": 2,
         "llm": {
-          "text": "{\"thought\": \"The schema explicitly states there are 28 instruments in the database.\", \"final\": {\"value\": 28, \"sql\": \"SELECT COUNT(*) FROM instruments\"}}",
+          "text": "I apologize for the format confusion. Let me try the correct approach:\n\n{\"thought\": \"Query the instruments table to find the registered company name for ticker SOBHA\", \"tool\": \"run_sql\", \"args\": {\"query\": \"SELECT name FROM instruments WHERE ticker = 'SOBHA'\"}}",
           "model": "claude-haiku-4-5-20251001",
-          "prompt_tokens": 1643,
-          "completion_tokens": 635,
-          "cache_write_tokens": 2129,
-          "cache_read_tokens": 28037,
-          "cost_usd_measured": 0.0118797,
-          "cost_usd_agent": 0.004818,
-          "latency_s": 11.67446058600001,
+          "prompt_tokens": 1653,
+          "completion_tokens": 590,
+          "cache_write_tokens": 2103,
+          "cache_read_tokens": 28047,
+          "cost_usd_measured": 0.011613700000000001,
+          "cost_usd_agent": 0.004603,
+          "latency_s": 14.555560220999979,
           "error": null
         },
         "parsed": {
-          "thought": "The schema explicitly states there are 28 instruments in the database.",
+          "thought": "Query the instruments table to find the registered company name for ticker SOBHA",
+          "tool": "run_sql",
+          "args": {
+            "query": "SELECT name FROM instruments WHERE ticker = 'SOBHA'"
+          }
+        },
+        "tool_result": {
+          "columns": [
+            "name"
+          ],
+          "rows": [
+            [
+              "Sobha Ltd"
+            ]
+          ],
+          "row_count": 1
+        }
+      },
+      {
+        "step": 3,
+        "llm": {
+          "text": "{\"thought\": \"Retrieved the registered company name for ticker SOBHA from the instruments table\", \"final\": {\"value\": \"Sobha Ltd\", \"sql\": \"SELECT name FROM instruments WHERE ticker = 'SOBHA'\"}}",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 1710,
+          "completion_tokens": 224,
+          "cache_write_tokens": 1938,
+          "cache_read_tokens": 13087,
+          "cost_usd_measured": 0.0080147,
+          "cost_usd_agent": 0.00283,
+          "latency_s": 7.5352321649999965,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Retrieved the registered company name for ticker SOBHA from the instruments table",
           "final": {
-            "value": 28,
-            "sql": "SELECT COUNT(*) FROM instruments"
+            "value": "Sobha Ltd",
+            "sql": "SELECT name FROM instruments WHERE ticker = 'SOBHA'"
           }
         }
       }
@@ -97,15 +130,23 @@
         "args": {},
         "ok": true,
         "note": "3365 chars"
+      },
+      {
+        "tool": "run_sql",
+        "args": {
+          "query": "SELECT name FROM instruments WHERE ticker = 'SOBHA'"
+        },
+        "ok": true,
+        "note": "1 rows"
       }
     ]
   },
   "grade": {
-    "task_id": "L01",
+    "task_id": "L04",
     "tier": "lookup",
-    "expected": 28,
-    "got": 28,
-    "coerced": false,
+    "expected": "Sobha Ltd",
+    "got": "Sobha Ltd",
+    "coerced": true,
     "detail": "",
     "verdict": "correct",
     "correct": true

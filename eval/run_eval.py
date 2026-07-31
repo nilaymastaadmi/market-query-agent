@@ -172,6 +172,7 @@ def aggregate(graded_rows, tasks_by_id) -> dict:
             if tasks_with_sql else 0.0
         ),
         "total_transport_retries": sum(r.get("transport_retries", 0) for r in R),
+        "total_rate_limit_429s": sum(r.get("rate_limit_hits", 0) for r in R),
         "total_protocol_violations": sum(r["protocol_violations"] for r in R),
         "tasks_with_protocol_violation": sum(
             1 for r in R if r["protocol_violations"] > 0
@@ -227,6 +228,8 @@ def main():
     ap.add_argument("--skip-injection", action="store_true")
     ap.add_argument("--calibrate", action="store_true",
                     help="measure the provider's fixed prompt overhead and exit")
+    ap.add_argument("--tag", default="", help="suffix for the summary/run dir, so a "
+                    "subset run cannot overwrite a full run's results")
     ap.add_argument("--list", action="store_true")
     args = ap.parse_args()
 
@@ -262,10 +265,11 @@ def main():
         inj = [] if args.skip_injection else list(INJECTION_TASKS)
         all_tasks = tasks + inj
 
-        run_dir = os.path.join(RESULTS, "runs", cname)
+        outname = cname + (f"_{args.tag}" if args.tag else "")
+        run_dir = os.path.join(RESULTS, "runs", outname)
         os.makedirs(run_dir, exist_ok=True)
 
-        print(f"\n=== {cname} | {args.provider}:{args.model} | "
+        print(f"\n=== {outname} | {args.provider}:{args.model} | "
               f"{len(tasks)} graded + {len(inj)} injection | "
               f"workers={args.workers} ===")
         started = datetime.now(timezone.utc).isoformat()
@@ -292,7 +296,8 @@ def main():
                         "claimed_unanswerable": False,
                         "tool_calls": 0, "sql_calls": 0, "sql_errors": 0,
                         "blocked_calls": 0, "retries": 0, "steps_used": 0,
-                        "protocol_violations": 0, "transport_retries": 0, "prompt_tokens": 0,
+                        "protocol_violations": 0, "transport_retries": 0,
+                        "rate_limit_hits": 0, "prompt_tokens": 0,
                         "completion_tokens": 0, "cache_write_tokens": 0,
                         "cache_read_tokens": 0, "cost_usd_measured": 0.0,
                         "cost_usd_agent": 0.0, "cost_usd_cache": 0.0,
@@ -337,7 +342,7 @@ def main():
         if inj_rows:
             summary["injection"] = aggregate_injection(inj_rows)
 
-        path = os.path.join(RESULTS, f"summary_{cname}.json")
+        path = os.path.join(RESULTS, f"summary_{outname}.json")
         with open(path, "w") as f:
             json.dump(summary, f, indent=2, default=str)
 
