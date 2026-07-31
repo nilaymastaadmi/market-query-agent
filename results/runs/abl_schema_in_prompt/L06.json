@@ -1,0 +1,140 @@
+{
+  "task": {
+    "id": "L06",
+    "tier": "lookup",
+    "answer_type": "list[string]",
+    "tolerance": 0,
+    "question": "List the tickers of all instruments in the 'Realty' sector, sorted alphabetically ascending.",
+    "gt_key": "realty_tickers"
+  },
+  "result": {
+    "task_id": "L06",
+    "tier": "lookup",
+    "question": "List the tickers of all instruments in the 'Realty' sector, sorted alphabetically ascending.",
+    "answer_type": "list[string]",
+    "config": {
+      "label": "abl_schema_in_prompt",
+      "schema_mode": "prompt",
+      "retry_on_sql_error": true,
+      "max_steps": 8
+    },
+    "model": "claude-haiku-4-5-20251001",
+    "provider": "claude-cli",
+    "value": [
+      "GODREJPROP",
+      "SOBHA"
+    ],
+    "cited_sql": "SELECT i.ticker FROM instruments i JOIN sectors s ON i.sector_id = s.sector_id WHERE s.sector_name = 'Realty' ORDER BY i.ticker ASC",
+    "claimed_unanswerable": false,
+    "refusal_reason": null,
+    "outcome": "answered",
+    "steps_used": 2,
+    "tool_calls": 1,
+    "sql_calls": 1,
+    "sql_errors": 0,
+    "blocked_calls": 0,
+    "retries": 0,
+    "protocol_violations": 0,
+    "transport_retries": 0,
+    "rate_limit_hits": 0,
+    "prompt_tokens": 1247,
+    "completion_tokens": 881,
+    "cache_write_tokens": 2011,
+    "cache_read_tokens": 42947,
+    "cost_usd_measured": 0.0139687,
+    "cost_usd_agent": 0.005652,
+    "cost_usd_cache": 0.0083167,
+    "latency_s": 18.28307306800002,
+    "llm_latency_s": 18.280124186000194,
+    "error": null,
+    "transcript": [
+      {
+        "step": 1,
+        "llm": {
+          "text": "{\"thought\": \"Query instruments joined with sectors to find all tickers in the Realty sector, sorted alphabetically.\", \"tool\": \"run_sql\", \"args\": {\"query\": \"SELECT i.ticker FROM instruments i JOIN sectors s ON i.sector_id = s.sector_id WHERE s.sector_name = 'Realty' ORDER BY i.ticker ASC\"}}",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 577,
+          "completion_tokens": 504,
+          "cache_write_tokens": 1113,
+          "cache_read_tokens": 28897,
+          "cost_usd_measured": 0.0082127,
+          "cost_usd_agent": 0.003097,
+          "latency_s": 9.54640260300016,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Query instruments joined with sectors to find all tickers in the Realty sector, sorted alphabetically.",
+          "tool": "run_sql",
+          "args": {
+            "query": "SELECT i.ticker FROM instruments i JOIN sectors s ON i.sector_id = s.sector_id WHERE s.sector_name = 'Realty' ORDER BY i.ticker ASC"
+          }
+        },
+        "tool_result": {
+          "columns": [
+            "ticker"
+          ],
+          "rows": [
+            [
+              "GODREJPROP"
+            ],
+            [
+              "SOBHA"
+            ]
+          ],
+          "row_count": 2
+        }
+      },
+      {
+        "step": 2,
+        "llm": {
+          "text": "```json\n{\n  \"thought\": \"Retrieved all instruments in the Realty sector ordered alphabetically\",\n  \"final\": {\n    \"value\": [\"GODREJPROP\", \"SOBHA\"],\n    \"sql\": \"SELECT i.ticker FROM instruments i JOIN sectors s ON i.sector_id = s.sector_id WHERE s.sector_name = 'Realty' ORDER BY i.ticker ASC\"\n  }\n}\n```",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 670,
+          "completion_tokens": 377,
+          "cache_write_tokens": 898,
+          "cache_read_tokens": 14050,
+          "cost_usd_measured": 0.005756,
+          "cost_usd_agent": 0.002555,
+          "latency_s": 8.733721583000033,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Retrieved all instruments in the Realty sector ordered alphabetically",
+          "final": {
+            "value": [
+              "GODREJPROP",
+              "SOBHA"
+            ],
+            "sql": "SELECT i.ticker FROM instruments i JOIN sectors s ON i.sector_id = s.sector_id WHERE s.sector_name = 'Realty' ORDER BY i.ticker ASC"
+          }
+        }
+      }
+    ],
+    "tool_call_log": [
+      {
+        "tool": "run_sql",
+        "args": {
+          "query": "SELECT i.ticker FROM instruments i JOIN sectors s ON i.sector_id = s.sector_id WHERE s.sector_name = 'Realty' ORDER BY i.ticker ASC"
+        },
+        "ok": true,
+        "note": "2 rows"
+      }
+    ]
+  },
+  "grade": {
+    "task_id": "L06",
+    "tier": "lookup",
+    "expected": [
+      "GODREJPROP",
+      "SOBHA"
+    ],
+    "got": [
+      "GODREJPROP",
+      "SOBHA"
+    ],
+    "coerced": false,
+    "detail": "",
+    "verdict": "correct",
+    "correct": true
+  }
+}

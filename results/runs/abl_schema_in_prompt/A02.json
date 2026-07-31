@@ -1,0 +1,125 @@
+{
+  "task": {
+    "id": "A02",
+    "tier": "aggregation",
+    "answer_type": "number",
+    "tolerance": 1e-06,
+    "question": "What is the average daily closing price of ticker 'MARICO' across its entire history in the database?",
+    "gt_key": "avg_close_marico"
+  },
+  "result": {
+    "task_id": "A02",
+    "tier": "aggregation",
+    "question": "What is the average daily closing price of ticker 'MARICO' across its entire history in the database?",
+    "answer_type": "number",
+    "config": {
+      "label": "abl_schema_in_prompt",
+      "schema_mode": "prompt",
+      "retry_on_sql_error": true,
+      "max_steps": 8
+    },
+    "model": "claude-haiku-4-5-20251001",
+    "provider": "claude-cli",
+    "value": 625.9236406498087,
+    "cited_sql": "SELECT AVG(p.close) as avg_close FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id WHERE i.ticker = 'MARICO'",
+    "claimed_unanswerable": false,
+    "refusal_reason": null,
+    "outcome": "answered",
+    "steps_used": 2,
+    "tool_calls": 1,
+    "sql_calls": 1,
+    "sql_errors": 0,
+    "blocked_calls": 0,
+    "retries": 0,
+    "protocol_violations": 0,
+    "transport_retries": 0,
+    "rate_limit_hits": 0,
+    "prompt_tokens": 1246,
+    "completion_tokens": 1226,
+    "cache_write_tokens": 2307,
+    "cache_read_tokens": 58113,
+    "cost_usd_measured": 0.017801300000000003,
+    "cost_usd_agent": 0.007376000000000001,
+    "cost_usd_cache": 0.0104253,
+    "latency_s": 25.031805076999945,
+    "llm_latency_s": 25.02964129599991,
+    "error": null,
+    "transcript": [
+      {
+        "step": 1,
+        "llm": {
+          "text": "{\"thought\": \"Query the database for the average daily closing price of MARICO ticker\", \"tool\": \"run_sql\", \"args\": {\"query\": \"SELECT AVG(p.close) as avg_close FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id WHERE i.ticker = 'MARICO'\"}}",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 583,
+          "completion_tokens": 928,
+          "cache_write_tokens": 1416,
+          "cache_read_tokens": 44063,
+          "cost_usd_measured": 0.012461300000000002,
+          "cost_usd_agent": 0.005223,
+          "latency_s": 16.61807699499991,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Query the database for the average daily closing price of MARICO ticker",
+          "tool": "run_sql",
+          "args": {
+            "query": "SELECT AVG(p.close) as avg_close FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id WHERE i.ticker = 'MARICO'"
+          }
+        },
+        "tool_result": {
+          "columns": [
+            "avg_close"
+          ],
+          "rows": [
+            [
+              625.9236406498087
+            ]
+          ],
+          "row_count": 1
+        }
+      },
+      {
+        "step": 2,
+        "llm": {
+          "text": "```json\n{\"thought\": \"Calculated average closing price of MARICO from the prices table.\", \"final\": {\"value\": 625.9236406498087, \"sql\": \"SELECT AVG(p.close) as avg_close FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id WHERE i.ticker = 'MARICO'\"}}\n```",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 663,
+          "completion_tokens": 298,
+          "cache_write_tokens": 891,
+          "cache_read_tokens": 14050,
+          "cost_usd_measured": 0.00534,
+          "cost_usd_agent": 0.002153,
+          "latency_s": 8.411564300999999,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Calculated average closing price of MARICO from the prices table.",
+          "final": {
+            "value": 625.9236406498087,
+            "sql": "SELECT AVG(p.close) as avg_close FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id WHERE i.ticker = 'MARICO'"
+          }
+        }
+      }
+    ],
+    "tool_call_log": [
+      {
+        "tool": "run_sql",
+        "args": {
+          "query": "SELECT AVG(p.close) as avg_close FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id WHERE i.ticker = 'MARICO'"
+        },
+        "ok": true,
+        "note": "1 rows"
+      }
+    ]
+  },
+  "grade": {
+    "task_id": "A02",
+    "tier": "aggregation",
+    "expected": 625.9236406498087,
+    "got": 625.9236406498087,
+    "coerced": false,
+    "detail": "",
+    "verdict": "correct",
+    "correct": true
+  }
+}

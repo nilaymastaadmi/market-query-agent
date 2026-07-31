@@ -1,0 +1,125 @@
+{
+  "task": {
+    "id": "L04",
+    "tier": "lookup",
+    "answer_type": "string",
+    "tolerance": 0,
+    "question": "What is the registered company name of the instrument with ticker 'SOBHA'?",
+    "gt_key": "name_of_sobha"
+  },
+  "result": {
+    "task_id": "L04",
+    "tier": "lookup",
+    "question": "What is the registered company name of the instrument with ticker 'SOBHA'?",
+    "answer_type": "string",
+    "config": {
+      "label": "abl_schema_in_prompt",
+      "schema_mode": "prompt",
+      "retry_on_sql_error": true,
+      "max_steps": 8
+    },
+    "model": "claude-haiku-4-5-20251001",
+    "provider": "claude-cli",
+    "value": "Sobha Ltd",
+    "cited_sql": "SELECT name FROM instruments WHERE ticker = 'SOBHA';",
+    "claimed_unanswerable": false,
+    "refusal_reason": null,
+    "outcome": "answered",
+    "steps_used": 2,
+    "tool_calls": 1,
+    "sql_calls": 1,
+    "sql_errors": 0,
+    "blocked_calls": 0,
+    "retries": 0,
+    "protocol_violations": 0,
+    "transport_retries": 0,
+    "rate_limit_hits": 0,
+    "prompt_tokens": 1198,
+    "completion_tokens": 2379,
+    "cache_write_tokens": 1867,
+    "cache_read_tokens": 42940,
+    "cost_usd_measured": 0.021121,
+    "cost_usd_agent": 0.013092999999999999,
+    "cost_usd_cache": 0.008028,
+    "latency_s": 36.04227599899991,
+    "llm_latency_s": 36.04131348099986,
+    "error": null,
+    "transcript": [
+      {
+        "step": 1,
+        "llm": {
+          "text": "```json\n{\"thought\": \"Querying instruments table for registered company name where ticker is SOBHA\", \"tool\": \"run_sql\", \"args\": {\"query\": \"SELECT name FROM instruments WHERE ticker = 'SOBHA';\"}}\n```",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 570,
+          "completion_tokens": 2137,
+          "cache_write_tokens": 1011,
+          "cache_read_tokens": 28890,
+          "cost_usd_measured": 0.016166,
+          "cost_usd_agent": 0.011255,
+          "latency_s": 29.51973949599983,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Querying instruments table for registered company name where ticker is SOBHA",
+          "tool": "run_sql",
+          "args": {
+            "query": "SELECT name FROM instruments WHERE ticker = 'SOBHA';"
+          }
+        },
+        "tool_result": {
+          "columns": [
+            "name"
+          ],
+          "rows": [
+            [
+              "Sobha Ltd"
+            ]
+          ],
+          "row_count": 1
+        }
+      },
+      {
+        "step": 2,
+        "llm": {
+          "text": "```json\n{\"thought\": \"Retrieved the registered company name for ticker SOBHA from the instruments table.\", \"final\": {\"value\": \"Sobha Ltd\", \"sql\": \"SELECT name FROM instruments WHERE ticker = 'SOBHA';\"}}\n```",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 628,
+          "completion_tokens": 242,
+          "cache_write_tokens": 856,
+          "cache_read_tokens": 14050,
+          "cost_usd_measured": 0.004954999999999999,
+          "cost_usd_agent": 0.0018379999999999998,
+          "latency_s": 6.521573985000032,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Retrieved the registered company name for ticker SOBHA from the instruments table.",
+          "final": {
+            "value": "Sobha Ltd",
+            "sql": "SELECT name FROM instruments WHERE ticker = 'SOBHA';"
+          }
+        }
+      }
+    ],
+    "tool_call_log": [
+      {
+        "tool": "run_sql",
+        "args": {
+          "query": "SELECT name FROM instruments WHERE ticker = 'SOBHA'"
+        },
+        "ok": true,
+        "note": "1 rows"
+      }
+    ]
+  },
+  "grade": {
+    "task_id": "L04",
+    "tier": "lookup",
+    "expected": "Sobha Ltd",
+    "got": "Sobha Ltd",
+    "coerced": true,
+    "detail": "",
+    "verdict": "correct",
+    "correct": true
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "task": {
+    "id": "L03",
+    "tier": "lookup",
+    "answer_type": "integer",
+    "tolerance": 0,
+    "question": "How many instruments have cap_tier 'SMALL'?",
+    "gt_key": "n_small_cap"
+  },
+  "result": {
+    "task_id": "L03",
+    "tier": "lookup",
+    "question": "How many instruments have cap_tier 'SMALL'?",
+    "answer_type": "integer",
+    "config": {
+      "label": "abl_schema_in_prompt",
+      "schema_mode": "prompt",
+      "retry_on_sql_error": true,
+      "max_steps": 8
+    },
+    "model": "claude-haiku-4-5-20251001",
+    "provider": "claude-cli",
+    "value": 9,
+    "cited_sql": "SELECT COUNT(*) as count FROM instruments WHERE cap_tier = 'SMALL'",
+    "claimed_unanswerable": false,
+    "refusal_reason": null,
+    "outcome": "answered",
+    "steps_used": 2,
+    "tool_calls": 1,
+    "sql_calls": 1,
+    "sql_errors": 0,
+    "blocked_calls": 0,
+    "retries": 0,
+    "protocol_violations": 0,
+    "transport_retries": 0,
+    "rate_limit_hits": 0,
+    "prompt_tokens": 1187,
+    "completion_tokens": 596,
+    "cache_write_tokens": 1882,
+    "cache_read_tokens": 42935,
+    "cost_usd_measured": 0.0122245,
+    "cost_usd_agent": 0.004167,
+    "cost_usd_cache": 0.0080575,
+    "latency_s": 16.192360823999934,
+    "llm_latency_s": 16.190738267000143,
+    "error": null,
+    "transcript": [
+      {
+        "step": 1,
+        "llm": {
+          "text": "{\"thought\": \"Count instruments with cap_tier SMALL\", \"tool\": \"run_sql\", \"args\": {\"query\": \"SELECT COUNT(*) as count FROM instruments WHERE cap_tier = 'SMALL'\"}}",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 565,
+          "completion_tokens": 410,
+          "cache_write_tokens": 1032,
+          "cache_read_tokens": 28885,
+          "cost_usd_measured": 0.0075675,
+          "cost_usd_agent": 0.0026149999999999997,
+          "latency_s": 10.597100805000082,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Count instruments with cap_tier SMALL",
+          "tool": "run_sql",
+          "args": {
+            "query": "SELECT COUNT(*) as count FROM instruments WHERE cap_tier = 'SMALL'"
+          }
+        },
+        "tool_result": {
+          "columns": [
+            "count"
+          ],
+          "rows": [
+            [
+              9
+            ]
+          ],
+          "row_count": 1
+        }
+      },
+      {
+        "step": 2,
+        "llm": {
+          "text": "```json\n{\"thought\": \"COUNT query shows 9 instruments with cap_tier = 'SMALL'\", \"final\": {\"value\": 9, \"sql\": \"SELECT COUNT(*) as count FROM instruments WHERE cap_tier = 'SMALL'\"}}\n```",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 622,
+          "completion_tokens": 186,
+          "cache_write_tokens": 850,
+          "cache_read_tokens": 14050,
+          "cost_usd_measured": 0.0046570000000000005,
+          "cost_usd_agent": 0.001552,
+          "latency_s": 5.593637462000061,
+          "error": null
+        },
+        "parsed": {
+          "thought": "COUNT query shows 9 instruments with cap_tier = 'SMALL'",
+          "final": {
+            "value": 9,
+            "sql": "SELECT COUNT(*) as count FROM instruments WHERE cap_tier = 'SMALL'"
+          }
+        }
+      }
+    ],
+    "tool_call_log": [
+      {
+        "tool": "run_sql",
+        "args": {
+          "query": "SELECT COUNT(*) as count FROM instruments WHERE cap_tier = 'SMALL'"
+        },
+        "ok": true,
+        "note": "1 rows"
+      }
+    ]
+  },
+  "grade": {
+    "task_id": "L03",
+    "tier": "lookup",
+    "expected": 9,
+    "got": 9,
+    "coerced": false,
+    "detail": "",
+    "verdict": "correct",
+    "correct": true
+  }
+}
