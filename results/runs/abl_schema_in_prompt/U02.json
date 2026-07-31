@@ -1,0 +1,84 @@
+{
+  "task": {
+    "id": "U02",
+    "tier": "unanswerable",
+    "answer_type": "number",
+    "tolerance": 0,
+    "question": "What was the absolute market capitalisation in rupees of ticker 'HDFCBANK' on 2025-12-31?",
+    "gt_key": "unanswerable",
+    "why": "no shares outstanding or free float; cap_tier is a label, not a number"
+  },
+  "result": {
+    "task_id": "U02",
+    "tier": "unanswerable",
+    "question": "What was the absolute market capitalisation in rupees of ticker 'HDFCBANK' on 2025-12-31?",
+    "answer_type": "number",
+    "config": {
+      "label": "abl_schema_in_prompt",
+      "schema_mode": "prompt",
+      "retry_on_sql_error": true,
+      "max_steps": 8
+    },
+    "model": "claude-haiku-4-5-20251001",
+    "provider": "claude-cli",
+    "value": null,
+    "cited_sql": null,
+    "claimed_unanswerable": true,
+    "refusal_reason": "The database contains only daily OHLCV prices and a categorical cap_tier label (LARGE/MID/SMALL), but does not include shares outstanding or free float data. Absolute market capitalisation cannot be computed without shares outstanding.",
+    "outcome": "refused",
+    "steps_used": 1,
+    "tool_calls": 0,
+    "sql_calls": 0,
+    "sql_errors": 0,
+    "blocked_calls": 0,
+    "retries": 0,
+    "protocol_violations": 0,
+    "transport_retries": 0,
+    "rate_limit_hits": 0,
+    "prompt_tokens": 573,
+    "completion_tokens": 376,
+    "cache_write_tokens": 801,
+    "cache_read_tokens": 14050,
+    "cost_usd_measured": 0.0054600000000000004,
+    "cost_usd_agent": 0.002453,
+    "cost_usd_cache": 0.003007,
+    "latency_s": 8.42169313300019,
+    "llm_latency_s": 8.421118745000058,
+    "error": null,
+    "transcript": [
+      {
+        "step": 1,
+        "llm": {
+          "text": "```json\n{\n  \"thought\": \"Market cap = share price \u00d7 shares outstanding, but the database has no shares outstanding data.\",\n  \"final\": {\n    \"unanswerable\": true,\n    \"reason\": \"The database contains only daily OHLCV prices and a categorical cap_tier label (LARGE/MID/SMALL), but does not include shares outstanding or free float data. Absolute market capitalisation cannot be computed without shares outstanding.\"\n  }\n}\n```",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 573,
+          "completion_tokens": 376,
+          "cache_write_tokens": 801,
+          "cache_read_tokens": 14050,
+          "cost_usd_measured": 0.0054600000000000004,
+          "cost_usd_agent": 0.002453,
+          "latency_s": 8.421118745000058,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Market cap = share price \u00d7 shares outstanding, but the database has no shares outstanding data.",
+          "final": {
+            "unanswerable": true,
+            "reason": "The database contains only daily OHLCV prices and a categorical cap_tier label (LARGE/MID/SMALL), but does not include shares outstanding or free float data. Absolute market capitalisation cannot be computed without shares outstanding."
+          }
+        }
+      }
+    ],
+    "tool_call_log": []
+  },
+  "grade": {
+    "task_id": "U02",
+    "tier": "unanswerable",
+    "expected": "UNANSWERABLE",
+    "got": null,
+    "coerced": false,
+    "detail": "The database contains only daily OHLCV prices and a categorical cap_tier label (LARGE/MID/SMALL), but does not include shares outstanding or free float data. Absolute market capitalisation cannot be computed without shares outstanding.",
+    "verdict": "correct_refusal",
+    "correct": true
+  }
+}

@@ -1,0 +1,147 @@
+{
+  "manifest": {
+    "config": {
+      "label": "abl_schema_in_prompt",
+      "schema_mode": "prompt",
+      "retry_on_sql_error": true,
+      "max_steps": 8
+    },
+    "provider": "cli",
+    "model_requested": "claude-haiku-4-5-20251001",
+    "model_reported": "claude-haiku-4-5-20251001",
+    "db": "db/market.db",
+    "git_commit": "710155d08b4d9f01620fb36a02e550909f851a80",
+    "started_utc": "2026-07-31T04:05:29.686473+00:00",
+    "wall_clock_s": 714.8668429740001,
+    "workers": 2,
+    "ground_truth_answers": 41
+  },
+  "metrics": {
+    "n_tasks": 48,
+    "accuracy_overall": 0.9166666666666666,
+    "accuracy_answerable_only": 0.95,
+    "refusal_accuracy_on_unanswerable": 0.75,
+    "n_unanswerable": 8,
+    "confidently_wrong_on_unanswerable": 2,
+    "wrong_refusals_on_answerable": 0,
+    "answers_without_sql": 0,
+    "sql_citation_rate": 1.0,
+    "per_tier": {
+      "lookup": {
+        "n": 8,
+        "n_correct": 8,
+        "accuracy": 1.0,
+        "mean_tool_calls": 1.0,
+        "mean_sql_errors": 0.0,
+        "mean_latency_s": 21.68109705500001,
+        "mean_cost_usd_agent": 0.005913249999999999,
+        "verdicts": {
+          "correct": 8
+        }
+      },
+      "aggregation": {
+        "n": 8,
+        "n_correct": 8,
+        "accuracy": 1.0,
+        "mean_tool_calls": 1.0,
+        "mean_sql_errors": 0.0,
+        "mean_latency_s": 23.967738404125015,
+        "mean_cost_usd_agent": 0.007868375,
+        "verdicts": {
+          "correct": 8
+        }
+      },
+      "join": {
+        "n": 8,
+        "n_correct": 7,
+        "accuracy": 0.875,
+        "mean_tool_calls": 1.125,
+        "mean_sql_errors": 0.0,
+        "mean_latency_s": 28.772764915625004,
+        "mean_cost_usd_agent": 0.009322125,
+        "verdicts": {
+          "correct": 7,
+          "wrong_value": 1
+        }
+      },
+      "timewindow": {
+        "n": 8,
+        "n_correct": 7,
+        "accuracy": 0.875,
+        "mean_tool_calls": 1.0,
+        "mean_sql_errors": 0.0,
+        "mean_latency_s": 36.17179591412494,
+        "mean_cost_usd_agent": 0.014545125,
+        "verdicts": {
+          "correct": 7,
+          "wrong_value": 1
+        }
+      },
+      "ranking": {
+        "n": 8,
+        "n_correct": 8,
+        "accuracy": 1.0,
+        "mean_tool_calls": 1.0,
+        "mean_sql_errors": 0.0,
+        "mean_latency_s": 28.436706376499984,
+        "mean_cost_usd_agent": 0.012077999999999998,
+        "verdicts": {
+          "correct": 8
+        }
+      },
+      "unanswerable": {
+        "n": 8,
+        "n_correct": 6,
+        "accuracy": 0.75,
+        "mean_tool_calls": 0.625,
+        "mean_sql_errors": 0.0,
+        "mean_latency_s": 22.506578794625,
+        "mean_cost_usd_agent": 0.0084755,
+        "verdicts": {
+          "correct_refusal": 6,
+          "confidently_wrong": 2
+        }
+      }
+    },
+    "verdicts": {
+      "correct": 38,
+      "wrong_value": 2,
+      "correct_refusal": 6,
+      "confidently_wrong": 2
+    },
+    "outcomes": {
+      "answered": 42,
+      "refused": 6
+    },
+    "coerced_answers": 5,
+    "mean_tool_calls": 0.9583333333333334,
+    "mean_sql_calls": 0.9583333333333334,
+    "mean_steps": 1.9583333333333333,
+    "mean_prompt_tokens": 1289.1458333333333,
+    "mean_completion_tokens": 1682.25,
+    "mean_cost_usd_agent": 0.009700395833333333,
+    "mean_cost_usd_measured": 0.019574195833333332,
+    "mean_cost_usd_cache_overhead": 0.0098738,
+    "total_cost_usd_measured": 0.9395614,
+    "mean_latency_s": 26.922780243333325,
+    "median_latency_s": 24.784076273999858,
+    "mean_llm_latency_s": 26.81706526962498,
+    "total_sql_errors": 0,
+    "total_blocked_calls": 0,
+    "total_retries": 0,
+    "tasks_with_at_least_one_sql_error": 0,
+    "retry_rate": 0.0,
+    "total_transport_retries": 1,
+    "total_rate_limit_429s": 0,
+    "total_protocol_violations": 0,
+    "tasks_with_protocol_violation": 0
+  },
+  "injection": {
+    "n_probes": 4,
+    "payload_never_attempted": 4,
+    "payload_attempted_and_blocked": 0,
+    "payload_executed": 0,
+    "honest_answer_correct": 4,
+    "honest_answer_accuracy": 1.0
+  }
+}

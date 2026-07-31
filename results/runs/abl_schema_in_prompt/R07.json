@@ -1,0 +1,129 @@
+{
+  "task": {
+    "id": "R07",
+    "tier": "ranking",
+    "answer_type": "string",
+    "tolerance": 0,
+    "question": "Which instrument had the single largest one-day percentage gain in closing price (close_t/close_{t-1} - 1) anywhere in the database? Return its ticker.",
+    "gt_key": "largest_one_day_gain_ticker"
+  },
+  "result": {
+    "task_id": "R07",
+    "tier": "ranking",
+    "question": "Which instrument had the single largest one-day percentage gain in closing price (close_t/close_{t-1} - 1) anywhere in the database? Return its ticker.",
+    "answer_type": "string",
+    "config": {
+      "label": "abl_schema_in_prompt",
+      "schema_mode": "prompt",
+      "retry_on_sql_error": true,
+      "max_steps": 8
+    },
+    "model": "claude-haiku-4-5-20251001",
+    "provider": "claude-cli",
+    "value": "SPANDANA",
+    "cited_sql": "WITH daily_returns AS (SELECT i.ticker, p.date, p.close, LAG(p.close) OVER (PARTITION BY p.instrument_id ORDER BY p.date) as prev_close, (p.close / LAG(p.close) OVER (PARTITION BY p.instrument_id ORDER BY p.date) - 1) as daily_return FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id) SELECT ticker, date, daily_return FROM daily_returns WHERE daily_return IS NOT NULL ORDER BY daily_return DESC LIMIT 1",
+    "claimed_unanswerable": false,
+    "refusal_reason": null,
+    "outcome": "answered",
+    "steps_used": 2,
+    "tool_calls": 1,
+    "sql_calls": 1,
+    "sql_errors": 0,
+    "blocked_calls": 0,
+    "retries": 0,
+    "protocol_violations": 0,
+    "transport_retries": 0,
+    "rate_limit_hits": 0,
+    "prompt_tokens": 1383,
+    "completion_tokens": 1570,
+    "cache_write_tokens": 2462,
+    "cache_read_tokens": 42960,
+    "cost_usd_measured": 0.018453,
+    "cost_usd_agent": 0.009233,
+    "cost_usd_cache": 0.00922,
+    "latency_s": 25.837125218999972,
+    "llm_latency_s": 25.789281532999894,
+    "error": null,
+    "transcript": [
+      {
+        "step": 1,
+        "llm": {
+          "text": "I need to use the correct JSON format as specified in the instructions. Let me query the database to find the instrument with the largest single-day percentage gain.\n\n{\"thought\": \"Calculate daily returns for all instruments and find the maximum\", \"tool\": \"run_sql\", \"args\": {\"query\": \"WITH daily_returns AS (SELECT i.ticker, p.date, p.close, LAG(p.close) OVER (PARTITION BY p.instrument_id ORDER BY p.date) as prev_close, (p.close / LAG(p.close) OVER (PARTITION BY p.instrument_id ORDER BY p.date) - 1) as daily_return FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id) SELECT ticker, date, daily_return FROM daily_returns WHERE daily_return IS NOT NULL ORDER BY daily_return DESC LIMIT 1\"}}",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 590,
+          "completion_tokens": 1184,
+          "cache_write_tokens": 1441,
+          "cache_read_tokens": 28910,
+          "cost_usd_measured": 0.012282999999999999,
+          "cost_usd_agent": 0.00651,
+          "latency_s": 16.935838907999823,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Calculate daily returns for all instruments and find the maximum",
+          "tool": "run_sql",
+          "args": {
+            "query": "WITH daily_returns AS (SELECT i.ticker, p.date, p.close, LAG(p.close) OVER (PARTITION BY p.instrument_id ORDER BY p.date) as prev_close, (p.close / LAG(p.close) OVER (PARTITION BY p.instrument_id ORDER BY p.date) - 1) as daily_return FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id) SELECT ticker, date, daily_return FROM daily_returns WHERE daily_return IS NOT NULL ORDER BY daily_return DESC LIMIT 1"
+          }
+        },
+        "tool_result": {
+          "columns": [
+            "ticker",
+            "date",
+            "daily_return"
+          ],
+          "rows": [
+            [
+              "SPANDANA",
+              "2025-04-21",
+              0.19999995503855894
+            ]
+          ],
+          "row_count": 1
+        }
+      },
+      {
+        "step": 2,
+        "llm": {
+          "text": "```json\n{\"thought\": \"Found the largest one-day closing price percentage gain by calculating daily returns for all instruments and ordering by the maximum gain.\", \"final\": {\"value\": \"SPANDANA\", \"sql\": \"WITH daily_returns AS (SELECT i.ticker, p.date, p.close, LAG(p.close) OVER (PARTITION BY p.instrument_id ORDER BY p.date) as prev_close, (p.close / LAG(p.close) OVER (PARTITION BY p.instrument_id ORDER BY p.date) - 1) as daily_return FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id) SELECT ticker, date, daily_return FROM daily_returns WHERE daily_return IS NOT NULL ORDER BY daily_return DESC LIMIT 1\"}}\n```",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 793,
+          "completion_tokens": 386,
+          "cache_write_tokens": 1021,
+          "cache_read_tokens": 14050,
+          "cost_usd_measured": 0.006170000000000001,
+          "cost_usd_agent": 0.002723,
+          "latency_s": 8.85344262500007,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Found the largest one-day closing price percentage gain by calculating daily returns for all instruments and ordering by the maximum gain.",
+          "final": {
+            "value": "SPANDANA",
+            "sql": "WITH daily_returns AS (SELECT i.ticker, p.date, p.close, LAG(p.close) OVER (PARTITION BY p.instrument_id ORDER BY p.date) as prev_close, (p.close / LAG(p.close) OVER (PARTITION BY p.instrument_id ORDER BY p.date) - 1) as daily_return FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id) SELECT ticker, date, daily_return FROM daily_returns WHERE daily_return IS NOT NULL ORDER BY daily_return DESC LIMIT 1"
+          }
+        }
+      }
+    ],
+    "tool_call_log": [
+      {
+        "tool": "run_sql",
+        "args": {
+          "query": "WITH daily_returns AS (SELECT i.ticker, p.date, p.close, LAG(p.close) OVER (PARTITION BY p.instrument_id ORDER BY p.date) as prev_close, (p.close / LAG(p.close) OVER (PARTITION BY p.instrument_id ORDER BY p.date) - 1) as daily_return FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id) SELECT ticker, date, daily_return FROM daily_returns WHERE daily_return IS NOT NULL ORDER BY daily_return DESC LIMIT 1"
+        },
+        "ok": true,
+        "note": "1 rows"
+      }
+    ]
+  },
+  "grade": {
+    "task_id": "R07",
+    "tier": "ranking",
+    "expected": "SPANDANA",
+    "got": "SPANDANA",
+    "coerced": false,
+    "detail": "",
+    "verdict": "correct",
+    "correct": true
+  }
+}

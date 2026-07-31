@@ -1,0 +1,151 @@
+{
+  "task": {
+    "id": "R06",
+    "tier": "ranking",
+    "answer_type": "list[string]",
+    "tolerance": 0,
+    "question": "Among instruments with cap_tier 'SMALL', return the 3 tickers with the highest average closing price over the whole database, in descending order.",
+    "gt_key": "top3_small_cap_avg_close"
+  },
+  "result": {
+    "task_id": "R06",
+    "tier": "ranking",
+    "question": "Among instruments with cap_tier 'SMALL', return the 3 tickers with the highest average closing price over the whole database, in descending order.",
+    "answer_type": "list[string]",
+    "config": {
+      "label": "abl_schema_in_prompt",
+      "schema_mode": "prompt",
+      "retry_on_sql_error": true,
+      "max_steps": 8
+    },
+    "model": "claude-haiku-4-5-20251001",
+    "provider": "claude-cli",
+    "value": [
+      "RATNAMANI",
+      "TATACOMM",
+      "JBCHEPHARM"
+    ],
+    "cited_sql": "SELECT i.ticker, AVG(p.close) as avg_close FROM instruments i JOIN prices p ON i.instrument_id = p.instrument_id WHERE i.cap_tier = 'SMALL' GROUP BY i.ticker ORDER BY avg_close DESC LIMIT 3",
+    "claimed_unanswerable": false,
+    "refusal_reason": null,
+    "outcome": "answered",
+    "steps_used": 2,
+    "tool_calls": 1,
+    "sql_calls": 1,
+    "sql_errors": 0,
+    "blocked_calls": 0,
+    "retries": 0,
+    "protocol_violations": 0,
+    "transport_retries": 0,
+    "rate_limit_hits": 0,
+    "prompt_tokens": 1331,
+    "completion_tokens": 1123,
+    "cache_write_tokens": 2174,
+    "cache_read_tokens": 42959,
+    "cost_usd_measured": 0.015589900000000002,
+    "cost_usd_agent": 0.006945999999999999,
+    "cost_usd_cache": 0.0086439,
+    "latency_s": 19.055905200000097,
+    "llm_latency_s": 19.051235563999853,
+    "error": null,
+    "transcript": [
+      {
+        "step": 1,
+        "llm": {
+          "text": "{\"thought\": \"Find the 3 SMALL cap tickers with highest average closing price\", \"tool\": \"run_sql\", \"args\": {\"query\": \"SELECT i.ticker, AVG(p.close) as avg_close FROM instruments i JOIN prices p ON i.instrument_id = p.instrument_id WHERE i.cap_tier = 'SMALL' GROUP BY i.ticker ORDER BY avg_close DESC LIMIT 3\"}}",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 589,
+          "completion_tokens": 700,
+          "cache_write_tokens": 1204,
+          "cache_read_tokens": 28909,
+          "cost_usd_measured": 0.009387900000000001,
+          "cost_usd_agent": 0.004089,
+          "latency_s": 11.61219397900004,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Find the 3 SMALL cap tickers with highest average closing price",
+          "tool": "run_sql",
+          "args": {
+            "query": "SELECT i.ticker, AVG(p.close) as avg_close FROM instruments i JOIN prices p ON i.instrument_id = p.instrument_id WHERE i.cap_tier = 'SMALL' GROUP BY i.ticker ORDER BY avg_close DESC LIMIT 3"
+          }
+        },
+        "tool_result": {
+          "columns": [
+            "ticker",
+            "avg_close"
+          ],
+          "rows": [
+            [
+              "RATNAMANI",
+              2752.643426831196
+            ],
+            [
+              "TATACOMM",
+              1640.8816951196684
+            ],
+            [
+              "JBCHEPHARM",
+              1607.500246255007
+            ]
+          ],
+          "row_count": 3
+        }
+      },
+      {
+        "step": 2,
+        "llm": {
+          "text": "```json\n{\n  \"thought\": \"Query returns the 3 SMALL cap tickers with highest average closing price, already in descending order.\",\n  \"final\": {\n    \"value\": [\"RATNAMANI\", \"TATACOMM\", \"JBCHEPHARM\"],\n    \"sql\": \"SELECT i.ticker, AVG(p.close) as avg_close FROM instruments i JOIN prices p ON i.instrument_id = p.instrument_id WHERE i.cap_tier = 'SMALL' GROUP BY i.ticker ORDER BY avg_close DESC LIMIT 3\"\n  }\n}\n```",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 742,
+          "completion_tokens": 423,
+          "cache_write_tokens": 970,
+          "cache_read_tokens": 14050,
+          "cost_usd_measured": 0.006202000000000001,
+          "cost_usd_agent": 0.0028569999999999997,
+          "latency_s": 7.4390415849998135,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Query returns the 3 SMALL cap tickers with highest average closing price, already in descending order.",
+          "final": {
+            "value": [
+              "RATNAMANI",
+              "TATACOMM",
+              "JBCHEPHARM"
+            ],
+            "sql": "SELECT i.ticker, AVG(p.close) as avg_close FROM instruments i JOIN prices p ON i.instrument_id = p.instrument_id WHERE i.cap_tier = 'SMALL' GROUP BY i.ticker ORDER BY avg_close DESC LIMIT 3"
+          }
+        }
+      }
+    ],
+    "tool_call_log": [
+      {
+        "tool": "run_sql",
+        "args": {
+          "query": "SELECT i.ticker, AVG(p.close) as avg_close FROM instruments i JOIN prices p ON i.instrument_id = p.instrument_id WHERE i.cap_tier = 'SMALL' GROUP BY i.ticker ORDER BY avg_close DESC LIMIT 3"
+        },
+        "ok": true,
+        "note": "3 rows"
+      }
+    ]
+  },
+  "grade": {
+    "task_id": "R06",
+    "tier": "ranking",
+    "expected": [
+      "RATNAMANI",
+      "TATACOMM",
+      "JBCHEPHARM"
+    ],
+    "got": [
+      "RATNAMANI",
+      "TATACOMM",
+      "JBCHEPHARM"
+    ],
+    "coerced": false,
+    "detail": "",
+    "verdict": "correct",
+    "correct": true
+  }
+}

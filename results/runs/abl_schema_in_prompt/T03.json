@@ -1,0 +1,125 @@
+{
+  "task": {
+    "id": "T03",
+    "tier": "timewindow",
+    "answer_type": "number",
+    "tolerance": 0.0001,
+    "question": "What was the maximum drawdown of ticker 'SPANDANA' over its entire history, measured on daily closing prices as min(close / running_max(close) - 1)? Return a negative fraction.",
+    "gt_key": "max_drawdown_spandana"
+  },
+  "result": {
+    "task_id": "T03",
+    "tier": "timewindow",
+    "question": "What was the maximum drawdown of ticker 'SPANDANA' over its entire history, measured on daily closing prices as min(close / running_max(close) - 1)? Return a negative fraction.",
+    "answer_type": "number",
+    "config": {
+      "label": "abl_schema_in_prompt",
+      "schema_mode": "prompt",
+      "retry_on_sql_error": true,
+      "max_steps": 8
+    },
+    "model": "claude-haiku-4-5-20251001",
+    "provider": "claude-cli",
+    "value": -0.8495998119694506,
+    "cited_sql": "WITH spandana_prices AS (\n  SELECT \n    date,\n    close,\n    MAX(close) OVER (ORDER BY date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) as running_max\n  FROM prices\n  WHERE instrument_id = (SELECT instrument_id FROM instruments WHERE ticker = 'SPANDANA')\n  ORDER BY date\n)\nSELECT MIN(close / running_max - 1) as max_drawdown\nFROM spandana_prices",
+    "claimed_unanswerable": false,
+    "refusal_reason": null,
+    "outcome": "answered",
+    "steps_used": 2,
+    "tool_calls": 1,
+    "sql_calls": 1,
+    "sql_errors": 0,
+    "blocked_calls": 0,
+    "retries": 0,
+    "protocol_violations": 0,
+    "transport_retries": 0,
+    "rate_limit_hits": 0,
+    "prompt_tokens": 1381,
+    "completion_tokens": 1793,
+    "cache_write_tokens": 2839,
+    "cache_read_tokens": 58270,
+    "cost_usd_measured": 0.021851,
+    "cost_usd_agent": 0.010346000000000001,
+    "cost_usd_cache": 0.011505000000000001,
+    "latency_s": 28.107421467999984,
+    "llm_latency_s": 28.104770026000324,
+    "error": null,
+    "transcript": [
+      {
+        "step": 1,
+        "llm": {
+          "text": "{\"thought\": \"Need to query the database for SPANDANA's maximum drawdown using the running maximum window function.\", \"tool\": \"run_sql\", \"args\": {\"query\": \"WITH spandana_prices AS (\\n  SELECT \\n    date,\\n    close,\\n    MAX(close) OVER (ORDER BY date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) as running_max\\n  FROM prices\\n  WHERE instrument_id = (SELECT instrument_id FROM instruments WHERE ticker = 'SPANDANA')\\n  ORDER BY date\\n)\\nSELECT MIN(close / running_max - 1) as max_drawdown\\nFROM spandana_prices\"}}",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 606,
+          "completion_tokens": 1376,
+          "cache_write_tokens": 1836,
+          "cache_read_tokens": 44220,
+          "cost_usd_measured": 0.01558,
+          "cost_usd_agent": 0.0074860000000000005,
+          "latency_s": 19.77921967200018,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Need to query the database for SPANDANA's maximum drawdown using the running maximum window function.",
+          "tool": "run_sql",
+          "args": {
+            "query": "WITH spandana_prices AS (\n  SELECT \n    date,\n    close,\n    MAX(close) OVER (ORDER BY date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) as running_max\n  FROM prices\n  WHERE instrument_id = (SELECT instrument_id FROM instruments WHERE ticker = 'SPANDANA')\n  ORDER BY date\n)\nSELECT MIN(close / running_max - 1) as max_drawdown\nFROM spandana_prices"
+          }
+        },
+        "tool_result": {
+          "columns": [
+            "max_drawdown"
+          ],
+          "rows": [
+            [
+              -0.8495998119694506
+            ]
+          ],
+          "row_count": 1
+        }
+      },
+      {
+        "step": 2,
+        "llm": {
+          "text": "{\"thought\": \"Computing maximum drawdown for SPANDANA using window function to track running maximum close price, then finding the minimum drawdown ratio.\", \"final\": {\"value\": -0.8495998119694506, \"sql\": \"WITH spandana_prices AS (\\n  SELECT \\n    date,\\n    close,\\n    MAX(close) OVER (ORDER BY date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) as running_max\\n  FROM prices\\n  WHERE instrument_id = (SELECT instrument_id FROM instruments WHERE ticker = 'SPANDANA')\\n  ORDER BY date\\n)\\nSELECT MIN(close / running_max - 1) as max_drawdown\\nFROM spandana_prices\"}}",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 775,
+          "completion_tokens": 417,
+          "cache_write_tokens": 1003,
+          "cache_read_tokens": 14050,
+          "cost_usd_measured": 0.006271,
+          "cost_usd_agent": 0.00286,
+          "latency_s": 8.325550354000143,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Computing maximum drawdown for SPANDANA using window function to track running maximum close price, then finding the minimum drawdown ratio.",
+          "final": {
+            "value": -0.8495998119694506,
+            "sql": "WITH spandana_prices AS (\n  SELECT \n    date,\n    close,\n    MAX(close) OVER (ORDER BY date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) as running_max\n  FROM prices\n  WHERE instrument_id = (SELECT instrument_id FROM instruments WHERE ticker = 'SPANDANA')\n  ORDER BY date\n)\nSELECT MIN(close / running_max - 1) as max_drawdown\nFROM spandana_prices"
+          }
+        }
+      }
+    ],
+    "tool_call_log": [
+      {
+        "tool": "run_sql",
+        "args": {
+          "query": "WITH spandana_prices AS (\n  SELECT \n    date,\n    close,\n    MAX(close) OVER (ORDER BY date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) as running_max\n  FROM prices\n  WHERE instrument_id = (SELECT instrument_id FROM instruments WHERE ticker = 'SPANDANA')\n  ORDER BY date\n)\nSELECT MIN(close / running_max - 1) as max_drawdown\nFROM spandana_prices"
+        },
+        "ok": true,
+        "note": "1 rows"
+      }
+    ]
+  },
+  "grade": {
+    "task_id": "T03",
+    "tier": "timewindow",
+    "expected": -0.8495998119694506,
+    "got": -0.8495998119694506,
+    "coerced": false,
+    "detail": "",
+    "verdict": "correct",
+    "correct": true
+  }
+}

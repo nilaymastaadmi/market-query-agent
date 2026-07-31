@@ -1,0 +1,125 @@
+{
+  "task": {
+    "id": "L08",
+    "tier": "lookup",
+    "answer_type": "string",
+    "tolerance": 0,
+    "question": "What is the earliest date present in the prices table, as a 'YYYY-MM-DD' string?",
+    "gt_key": "min_date"
+  },
+  "result": {
+    "task_id": "L08",
+    "tier": "lookup",
+    "question": "What is the earliest date present in the prices table, as a 'YYYY-MM-DD' string?",
+    "answer_type": "string",
+    "config": {
+      "label": "abl_no_retry",
+      "schema_mode": "tool",
+      "retry_on_sql_error": false,
+      "max_steps": 8
+    },
+    "model": "claude-haiku-4-5-20251001",
+    "provider": "claude-cli",
+    "value": "2023-01-02",
+    "cited_sql": "SELECT MIN(date) as earliest_date FROM prices",
+    "claimed_unanswerable": false,
+    "refusal_reason": null,
+    "outcome": "answered",
+    "steps_used": 2,
+    "tool_calls": 1,
+    "sql_calls": 1,
+    "sql_errors": 0,
+    "blocked_calls": 0,
+    "retries": 0,
+    "protocol_violations": 0,
+    "transport_retries": 0,
+    "rate_limit_hits": 0,
+    "prompt_tokens": 1220,
+    "completion_tokens": 666,
+    "cache_write_tokens": 1208,
+    "cache_read_tokens": 54928,
+    "cost_usd_measured": 0.0124588,
+    "cost_usd_agent": 0.00455,
+    "cost_usd_cache": 0.0079088,
+    "latency_s": 17.663250182999718,
+    "llm_latency_s": 17.660872846000302,
+    "error": null,
+    "transcript": [
+      {
+        "step": 1,
+        "llm": {
+          "text": "{\"thought\": \"Query the prices table to find the earliest date\", \"tool\": \"run_sql\", \"args\": {\"query\": \"SELECT MIN(date) as earliest_date FROM prices\"}}",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 584,
+          "completion_tokens": 485,
+          "cache_write_tokens": 344,
+          "cache_read_tokens": 41841,
+          "cost_usd_measured": 0.0078811,
+          "cost_usd_agent": 0.003009,
+          "latency_s": 11.379327242000045,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Query the prices table to find the earliest date",
+          "tool": "run_sql",
+          "args": {
+            "query": "SELECT MIN(date) as earliest_date FROM prices"
+          }
+        },
+        "tool_result": {
+          "columns": [
+            "earliest_date"
+          ],
+          "rows": [
+            [
+              "2023-01-02"
+            ]
+          ],
+          "row_count": 1
+        }
+      },
+      {
+        "step": 2,
+        "llm": {
+          "text": "```json\n{\"thought\": \"Found the earliest date in the prices table using MIN(date).\", \"final\": {\"value\": \"2023-01-02\", \"sql\": \"SELECT MIN(date) as earliest_date FROM prices\"}}\n```",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 636,
+          "completion_tokens": 181,
+          "cache_write_tokens": 864,
+          "cache_read_tokens": 13087,
+          "cost_usd_measured": 0.0045777000000000005,
+          "cost_usd_agent": 0.0015409999999999998,
+          "latency_s": 6.281545604000257,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Found the earliest date in the prices table using MIN(date).",
+          "final": {
+            "value": "2023-01-02",
+            "sql": "SELECT MIN(date) as earliest_date FROM prices"
+          }
+        }
+      }
+    ],
+    "tool_call_log": [
+      {
+        "tool": "run_sql",
+        "args": {
+          "query": "SELECT MIN(date) as earliest_date FROM prices"
+        },
+        "ok": true,
+        "note": "1 rows"
+      }
+    ]
+  },
+  "grade": {
+    "task_id": "L08",
+    "tier": "lookup",
+    "expected": "2023-01-02",
+    "got": "2023-01-02",
+    "coerced": false,
+    "detail": "",
+    "verdict": "correct",
+    "correct": true
+  }
+}

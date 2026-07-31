@@ -1,0 +1,125 @@
+{
+  "task": {
+    "id": "T05",
+    "tier": "timewindow",
+    "answer_type": "number",
+    "tolerance": 0.0001,
+    "question": "What was the Sharpe ratio of ticker 'HDFCBANK' over its entire history? Use daily simple returns, annualise the mean by multiplying by 252, annualise the standard deviation (ddof=1) by sqrt(252), and use an annual risk-free rate of 0.065. Sharpe = (mean*252 - 0.065) / (std*sqrt(252)).",
+    "gt_key": "sharpe_hdfcbank"
+  },
+  "result": {
+    "task_id": "T05",
+    "tier": "timewindow",
+    "question": "What was the Sharpe ratio of ticker 'HDFCBANK' over its entire history? Use daily simple returns, annualise the mean by multiplying by 252, annualise the standard deviation (ddof=1) by sqrt(252), and use an annual risk-free rate of 0.065. Sharpe = (mean*252 - 0.065) / (std*sqrt(252)).",
+    "answer_type": "number",
+    "config": {
+      "label": "abl_schema_in_prompt",
+      "schema_mode": "prompt",
+      "retry_on_sql_error": true,
+      "max_steps": 8
+    },
+    "model": "claude-haiku-4-5-20251001",
+    "provider": "claude-cli",
+    "value": -0.17608528602484233,
+    "cited_sql": "WITH hdfcbank_prices AS (\n  SELECT date, close\n  FROM prices\n  INNER JOIN instruments ON prices.instrument_id = instruments.instrument_id\n  WHERE instruments.ticker = 'HDFCBANK'\n  ORDER BY date\n),\nreturns_with_lag AS (\n  SELECT \n    close / LAG(close) OVER (ORDER BY date) - 1 as daily_return\n  FROM hdfcbank_prices\n),\nreturns_filtered AS (\n  SELECT daily_return\n  FROM returns_with_lag\n  WHERE daily_return IS NOT NULL\n),\nstats AS (\n  SELECT \n    COUNT(*) as n,\n    AVG(daily_return) as mean_r,\n    SQRT(\n      SUM((daily_return - (SELECT AVG(daily_return) FROM returns_filtered)) * \n          (daily_return - (SELECT AVG(daily_return) FROM returns_filtered))) \n      / ((SELECT COUNT(*) FROM returns_filtered) - 1)\n    ) as std_r\n  FROM returns_filtered\n)\nSELECT \n  (mean_r * 252 - 0.065) / (std_r * SQRT(252)) as sharpe_ratio\nFROM stats",
+    "claimed_unanswerable": false,
+    "refusal_reason": null,
+    "outcome": "answered",
+    "steps_used": 2,
+    "tool_calls": 1,
+    "sql_calls": 1,
+    "sql_errors": 0,
+    "blocked_calls": 0,
+    "retries": 0,
+    "protocol_violations": 0,
+    "transport_retries": 0,
+    "rate_limit_hits": 0,
+    "prompt_tokens": 1687,
+    "completion_tokens": 4415,
+    "cache_write_tokens": 5243,
+    "cache_read_tokens": 93801,
+    "cost_usd_measured": 0.043628099999999996,
+    "cost_usd_agent": 0.023762,
+    "cost_usd_cache": 0.0198661,
+    "latency_s": 52.77054865900004,
+    "llm_latency_s": 52.767085681000026,
+    "error": null,
+    "transcript": [
+      {
+        "step": 1,
+        "llm": {
+          "text": "```json\n{\"thought\": \"Computing Sharpe ratio for HDFCBANK using SQL to calculate daily returns and apply the Sharpe formula\", \"tool\": \"run_sql\", \"args\": {\"query\": \"WITH hdfcbank_prices AS (\\n  SELECT date, close\\n  FROM prices\\n  INNER JOIN instruments ON prices.instrument_id = instruments.instrument_id\\n  WHERE instruments.ticker = 'HDFCBANK'\\n  ORDER BY date\\n),\\nreturns_with_lag AS (\\n  SELECT \\n    close / LAG(close) OVER (ORDER BY date) - 1 as daily_return\\n  FROM hdfcbank_prices\\n),\\nreturns_filtered AS (\\n  SELECT daily_return\\n  FROM returns_with_lag\\n  WHERE daily_return IS NOT NULL\\n),\\nstats AS (\\n  SELECT \\n    COUNT(*) as n,\\n    AVG(daily_return) as mean_r,\\n    SQRT(\\n      SUM((daily_return - (SELECT AVG(daily_return) FROM returns_filtered)) * \\n          (daily_return - (SELECT AVG(daily_return) FROM returns_filtered))) \\n      / ((SELECT COUNT(*) FROM returns_filtered) - 1)\\n    ) as std_r\\n  FROM returns_filtered\\n)\\nSELECT \\n  (mean_r * 252 - 0.065) / (std_r * SQRT(252)) as sharpe_ratio\\nFROM stats\"}}\n```",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 669,
+          "completion_tokens": 3518,
+          "cache_write_tokens": 3997,
+          "cache_read_tokens": 79751,
+          "cost_usd_measured": 0.0342281,
+          "cost_usd_agent": 0.018258999999999997,
+          "latency_s": 37.907247119999965,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Computing Sharpe ratio for HDFCBANK using SQL to calculate daily returns and apply the Sharpe formula",
+          "tool": "run_sql",
+          "args": {
+            "query": "WITH hdfcbank_prices AS (\n  SELECT date, close\n  FROM prices\n  INNER JOIN instruments ON prices.instrument_id = instruments.instrument_id\n  WHERE instruments.ticker = 'HDFCBANK'\n  ORDER BY date\n),\nreturns_with_lag AS (\n  SELECT \n    close / LAG(close) OVER (ORDER BY date) - 1 as daily_return\n  FROM hdfcbank_prices\n),\nreturns_filtered AS (\n  SELECT daily_return\n  FROM returns_with_lag\n  WHERE daily_return IS NOT NULL\n),\nstats AS (\n  SELECT \n    COUNT(*) as n,\n    AVG(daily_return) as mean_r,\n    SQRT(\n      SUM((daily_return - (SELECT AVG(daily_return) FROM returns_filtered)) * \n          (daily_return - (SELECT AVG(daily_return) FROM returns_filtered))) \n      / ((SELECT COUNT(*) FROM returns_filtered) - 1)\n    ) as std_r\n  FROM returns_filtered\n)\nSELECT \n  (mean_r * 252 - 0.065) / (std_r * SQRT(252)) as sharpe_ratio\nFROM stats"
+          }
+        },
+        "tool_result": {
+          "columns": [
+            "sharpe_ratio"
+          ],
+          "rows": [
+            [
+              -0.17608528602484233
+            ]
+          ],
+          "row_count": 1
+        }
+      },
+      {
+        "step": 2,
+        "llm": {
+          "text": "```json\n{\"thought\": \"Computed Sharpe ratio for HDFCBANK using daily returns with annualized mean and volatility (ddof=1), applying the specified formula.\", \"final\": {\"value\": -0.17608528602484233, \"sql\": \"WITH hdfcbank_prices AS (\\n  SELECT date, close\\n  FROM prices\\n  INNER JOIN instruments ON prices.instrument_id = instruments.instrument_id\\n  WHERE instruments.ticker = 'HDFCBANK'\\n  ORDER BY date\\n),\\nreturns_with_lag AS (\\n  SELECT \\n    close / LAG(close) OVER (ORDER BY date) - 1 as daily_return\\n  FROM hdfcbank_prices\\n),\\nreturns_filtered AS (\\n  SELECT daily_return\\n  FROM returns_with_lag\\n  WHERE daily_return IS NOT NULL\\n),\\nstats AS (\\n  SELECT \\n    COUNT(*) as n,\\n    AVG(daily_return) as mean_r,\\n    SQRT(\\n      SUM((daily_return - (SELECT AVG(daily_return) FROM returns_filtered)) * \\n          (daily_return - (SELECT AVG(daily_return) FROM returns_filtered))) \\n      / ((SELECT COUNT(*) FROM returns_filtered) - 1)\\n    ) as std_r\\n  FROM returns_filtered\\n)\\nSELECT \\n  (mean_r * 252 - 0.065) / (std_r * SQRT(252)) as sharpe_ratio\\nFROM stats\"}}\n```",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 1018,
+          "completion_tokens": 897,
+          "cache_write_tokens": 1246,
+          "cache_read_tokens": 14050,
+          "cost_usd_measured": 0.009399999999999999,
+          "cost_usd_agent": 0.005503,
+          "latency_s": 14.85983856100006,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Computed Sharpe ratio for HDFCBANK using daily returns with annualized mean and volatility (ddof=1), applying the specified formula.",
+          "final": {
+            "value": -0.17608528602484233,
+            "sql": "WITH hdfcbank_prices AS (\n  SELECT date, close\n  FROM prices\n  INNER JOIN instruments ON prices.instrument_id = instruments.instrument_id\n  WHERE instruments.ticker = 'HDFCBANK'\n  ORDER BY date\n),\nreturns_with_lag AS (\n  SELECT \n    close / LAG(close) OVER (ORDER BY date) - 1 as daily_return\n  FROM hdfcbank_prices\n),\nreturns_filtered AS (\n  SELECT daily_return\n  FROM returns_with_lag\n  WHERE daily_return IS NOT NULL\n),\nstats AS (\n  SELECT \n    COUNT(*) as n,\n    AVG(daily_return) as mean_r,\n    SQRT(\n      SUM((daily_return - (SELECT AVG(daily_return) FROM returns_filtered)) * \n          (daily_return - (SELECT AVG(daily_return) FROM returns_filtered))) \n      / ((SELECT COUNT(*) FROM returns_filtered) - 1)\n    ) as std_r\n  FROM returns_filtered\n)\nSELECT \n  (mean_r * 252 - 0.065) / (std_r * SQRT(252)) as sharpe_ratio\nFROM stats"
+          }
+        }
+      }
+    ],
+    "tool_call_log": [
+      {
+        "tool": "run_sql",
+        "args": {
+          "query": "WITH hdfcbank_prices AS (\n  SELECT date, close\n  FROM prices\n  INNER JOIN instruments ON prices.instrument_id = instruments.instrument_id\n  WHERE instruments.ticker = 'HDFCBANK'\n  ORDER BY date\n),\nreturns_with_lag AS (\n  SELECT \n    close / LAG(close) OVER (ORDER BY date) - 1 as daily_return\n  FROM hdfcbank_prices\n),\nreturns_filtered AS (\n  SELECT daily_return\n  FROM returns_with_lag\n  WHERE daily_return IS NOT NULL\n),\nstats AS (\n  SELECT \n    COUNT(*) as n,\n    AVG(daily_return) as mean_r,\n    SQRT(\n      SUM((daily_return - (SELECT AVG(daily_return) FROM returns_filtered)) * \n          (daily_return - (SELECT AVG(daily_return) FROM returns_filtered))) \n      / ((SELECT COUNT(*) FROM returns_filtered) - 1)\n    ) as std_r\n  FROM returns_filtered\n)\nSELECT \n  (mean_r * 252 - 0.065) / (std_r * SQRT(252)) as sharpe_ratio\nFROM stats"
+        },
+        "ok": true,
+        "note": "1 rows"
+      }
+    ]
+  },
+  "grade": {
+    "task_id": "T05",
+    "tier": "timewindow",
+    "expected": -0.17608528602484233,
+    "got": -0.17608528602484233,
+    "coerced": false,
+    "detail": "",
+    "verdict": "correct",
+    "correct": true
+  }
+}
