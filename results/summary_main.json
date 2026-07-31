@@ -1,0 +1,149 @@
+{
+  "manifest": {
+    "config": {
+      "label": "main",
+      "schema_mode": "tool",
+      "retry_on_sql_error": true,
+      "max_steps": 8
+    },
+    "provider": "cli",
+    "model_requested": "claude-haiku-4-5-20251001",
+    "model_reported": "claude-haiku-4-5-20251001",
+    "db": "db/market.db",
+    "git_commit": "668e43f39bbb73c6c176d1f5eacf29aa52c1c386",
+    "started_utc": "2026-07-31T04:06:08.898090+00:00",
+    "wall_clock_s": 27.051616591000084,
+    "workers": 1,
+    "ground_truth_answers": 41,
+    "rescored_utc": "2026-07-31T04:07:18.266916+00:00",
+    "notes": [
+      "J03 re-run individually after eval/audit_ties.py found it was a 5-5 tie; the question now states a tie-break rule. All other tasks come from the batch run started 2026-07-31T03:46Z, so manifest started_utc/wall_clock_s describe the J03 rerun rather than the batch."
+    ],
+    "n_task_logs": 52
+  },
+  "metrics": {
+    "n_tasks": 48,
+    "accuracy_overall": 0.9375,
+    "accuracy_answerable_only": 1.0,
+    "refusal_accuracy_on_unanswerable": 0.625,
+    "n_unanswerable": 8,
+    "confidently_wrong_on_unanswerable": 3,
+    "wrong_refusals_on_answerable": 0,
+    "answers_without_sql": 0,
+    "sql_citation_rate": 1.0,
+    "per_tier": {
+      "lookup": {
+        "n": 8,
+        "n_correct": 8,
+        "accuracy": 1.0,
+        "mean_tool_calls": 1.75,
+        "mean_sql_errors": 0.0,
+        "mean_latency_s": 32.02893511500001,
+        "mean_cost_usd_agent": 0.010358999999999998,
+        "verdicts": {
+          "correct": 8
+        }
+      },
+      "aggregation": {
+        "n": 8,
+        "n_correct": 8,
+        "accuracy": 1.0,
+        "mean_tool_calls": 2.0,
+        "mean_sql_errors": 0.0,
+        "mean_latency_s": 37.222488584375,
+        "mean_cost_usd_agent": 0.012819375,
+        "verdicts": {
+          "correct": 8
+        }
+      },
+      "join": {
+        "n": 8,
+        "n_correct": 8,
+        "accuracy": 1.0,
+        "mean_tool_calls": 1.875,
+        "mean_sql_errors": 0.0,
+        "mean_latency_s": 35.8855586115,
+        "mean_cost_usd_agent": 0.011989874999999999,
+        "verdicts": {
+          "correct": 8
+        }
+      },
+      "timewindow": {
+        "n": 8,
+        "n_correct": 8,
+        "accuracy": 1.0,
+        "mean_tool_calls": 2.125,
+        "mean_sql_errors": 0.0,
+        "mean_latency_s": 57.55995171712502,
+        "mean_cost_usd_agent": 0.02460325,
+        "verdicts": {
+          "correct": 8
+        }
+      },
+      "ranking": {
+        "n": 8,
+        "n_correct": 8,
+        "accuracy": 1.0,
+        "mean_tool_calls": 2.125,
+        "mean_sql_errors": 0.0,
+        "mean_latency_s": 51.150959640749974,
+        "mean_cost_usd_agent": 0.022268749999999997,
+        "verdicts": {
+          "correct": 8
+        }
+      },
+      "unanswerable": {
+        "n": 8,
+        "n_correct": 5,
+        "accuracy": 0.625,
+        "mean_tool_calls": 1.5,
+        "mean_sql_errors": 0.0,
+        "mean_latency_s": 35.17610810787501,
+        "mean_cost_usd_agent": 0.013713125,
+        "verdicts": {
+          "correct_refusal": 5,
+          "confidently_wrong": 3
+        }
+      }
+    },
+    "verdicts": {
+      "correct": 40,
+      "correct_refusal": 5,
+      "confidently_wrong": 3
+    },
+    "outcomes": {
+      "answered": 43,
+      "refused": 5
+    },
+    "coerced_answers": 5,
+    "mean_tool_calls": 1.8958333333333333,
+    "mean_sql_calls": 0.8541666666666666,
+    "mean_steps": 3.0,
+    "mean_prompt_tokens": 4104.9375,
+    "mean_completion_tokens": 2370.7916666666665,
+    "mean_cost_usd_agent": 0.01595889583333333,
+    "mean_cost_usd_measured": 0.0368186,
+    "mean_cost_usd_cache_overhead": 0.02085970416666667,
+    "total_cost_usd_measured": 1.7672927999999999,
+    "mean_latency_s": 41.50400029610417,
+    "median_latency_s": 37.17893495849995,
+    "mean_llm_latency_s": 41.3967298608125,
+    "total_sql_errors": 0,
+    "total_blocked_calls": 0,
+    "total_retries": 0,
+    "tasks_with_at_least_one_sql_error": 0,
+    "retry_rate": 0.0,
+    "total_transport_retries": 1,
+    "total_rate_limit_429s": 0,
+    "total_protocol_violations": 5,
+    "tasks_with_protocol_violation": 5
+  },
+  "injection": {
+    "n_probes": 4,
+    "payload_never_attempted": 4,
+    "payload_attempted_and_blocked": 0,
+    "payload_executed": 0,
+    "honest_answer_correct": 4,
+    "honest_answer_accuracy": 1.0
+  }
+}

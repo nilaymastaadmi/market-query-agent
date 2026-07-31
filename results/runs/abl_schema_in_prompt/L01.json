@@ -1,0 +1,125 @@
+{
+  "task": {
+    "id": "L01",
+    "tier": "lookup",
+    "answer_type": "integer",
+    "tolerance": 0,
+    "question": "How many instruments are in the database?",
+    "gt_key": "n_instruments"
+  },
+  "result": {
+    "task_id": "L01",
+    "tier": "lookup",
+    "question": "How many instruments are in the database?",
+    "answer_type": "integer",
+    "config": {
+      "label": "abl_schema_in_prompt",
+      "schema_mode": "prompt",
+      "retry_on_sql_error": true,
+      "max_steps": 8
+    },
+    "model": "claude-haiku-4-5-20251001",
+    "provider": "claude-cli",
+    "value": 28,
+    "cited_sql": "SELECT COUNT(*) as count FROM instruments",
+    "claimed_unanswerable": false,
+    "refusal_reason": null,
+    "outcome": "answered",
+    "steps_used": 2,
+    "tool_calls": 1,
+    "sql_calls": 1,
+    "sql_errors": 0,
+    "blocked_calls": 0,
+    "retries": 0,
+    "protocol_violations": 0,
+    "transport_retries": 0,
+    "rate_limit_hits": 0,
+    "prompt_tokens": 1168,
+    "completion_tokens": 571,
+    "cache_write_tokens": 3715,
+    "cache_read_tokens": 41002,
+    "cost_usd_measured": 0.0155532,
+    "cost_usd_agent": 0.004023,
+    "cost_usd_cache": 0.0115302,
+    "latency_s": 21.80473542599998,
+    "llm_latency_s": 21.80320635099997,
+    "error": null,
+    "transcript": [
+      {
+        "step": 1,
+        "llm": {
+          "text": "{\"thought\": \"Counting the total number of instruments in the database.\", \"tool\": \"run_sql\", \"args\": {\"query\": \"SELECT COUNT(*) as count FROM instruments\"}}",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 560,
+          "completion_tokens": 397,
+          "cache_write_tokens": 2879,
+          "cache_read_tokens": 26952,
+          "cost_usd_measured": 0.0109982,
+          "cost_usd_agent": 0.0025449999999999995,
+          "latency_s": 14.911319482999943,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Counting the total number of instruments in the database.",
+          "tool": "run_sql",
+          "args": {
+            "query": "SELECT COUNT(*) as count FROM instruments"
+          }
+        },
+        "tool_result": {
+          "columns": [
+            "count"
+          ],
+          "rows": [
+            [
+              28
+            ]
+          ],
+          "row_count": 1
+        }
+      },
+      {
+        "step": 2,
+        "llm": {
+          "text": "```json\n{\"thought\": \"Counted all rows in the instruments table.\", \"final\": {\"value\": 28, \"sql\": \"SELECT COUNT(*) as count FROM instruments\"}}\n```",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 608,
+          "completion_tokens": 174,
+          "cache_write_tokens": 836,
+          "cache_read_tokens": 14050,
+          "cost_usd_measured": 0.004555,
+          "cost_usd_agent": 0.0014780000000000001,
+          "latency_s": 6.891886868000029,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Counted all rows in the instruments table.",
+          "final": {
+            "value": 28,
+            "sql": "SELECT COUNT(*) as count FROM instruments"
+          }
+        }
+      }
+    ],
+    "tool_call_log": [
+      {
+        "tool": "run_sql",
+        "args": {
+          "query": "SELECT COUNT(*) as count FROM instruments"
+        },
+        "ok": true,
+        "note": "1 rows"
+      }
+    ]
+  },
+  "grade": {
+    "task_id": "L01",
+    "tier": "lookup",
+    "expected": 28,
+    "got": 28,
+    "coerced": false,
+    "detail": "",
+    "verdict": "correct",
+    "correct": true
+  }
+}

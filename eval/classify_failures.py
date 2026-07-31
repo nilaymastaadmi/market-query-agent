@@ -42,6 +42,12 @@ TAXONOMY = {
     "schema_misread": "read the schema but misunderstood a relationship or a join key",
     "gave_up": "ran out of steps, or terminated without producing an answer",
     "confidently_wrong_unanswerable": "produced a value for a question the schema cannot answer",
+    "fabricated_after_empty_result": "wrote CORRECT SQL, got zero rows back, and reported a "
+                                     "plausible number anyway. Distinguished from "
+                                     "confidently_wrong_unanswerable because the agent held "
+                                     "direct evidence the answer did not exist and overrode it",
+    "silent_disambiguation": "an ambiguous question has several defensible readings; the agent "
+                             "picked one, computed it correctly, and never flagged the choice",
     # --- added during labelling, because failures landed here ---
     "over_refusal": "refused a question that the schema can in fact answer",
     "no_sql_citation": "produced an answer without citing the SQL behind it",

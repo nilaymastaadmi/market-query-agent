@@ -1,0 +1,125 @@
+{
+  "task": {
+    "id": "A06",
+    "tier": "aggregation",
+    "answer_type": "number",
+    "tolerance": 1e-06,
+    "question": "What is the largest single-day intraday range (high minus low) recorded for ticker 'SHREECEM'?",
+    "gt_key": "max_range_shreecem"
+  },
+  "result": {
+    "task_id": "A06",
+    "tier": "aggregation",
+    "question": "What is the largest single-day intraday range (high minus low) recorded for ticker 'SHREECEM'?",
+    "answer_type": "number",
+    "config": {
+      "label": "abl_schema_in_prompt",
+      "schema_mode": "prompt",
+      "retry_on_sql_error": true,
+      "max_steps": 8
+    },
+    "model": "claude-haiku-4-5-20251001",
+    "provider": "claude-cli",
+    "value": 2277.219951655363,
+    "cited_sql": "SELECT MAX(high - low) as max_range FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id WHERE i.ticker = 'SHREECEM'",
+    "claimed_unanswerable": false,
+    "refusal_reason": null,
+    "outcome": "answered",
+    "steps_used": 2,
+    "tool_calls": 1,
+    "sql_calls": 1,
+    "sql_errors": 0,
+    "blocked_calls": 0,
+    "retries": 0,
+    "protocol_violations": 0,
+    "transport_retries": 0,
+    "rate_limit_hits": 0,
+    "prompt_tokens": 1246,
+    "completion_tokens": 1511,
+    "cache_write_tokens": 2026,
+    "cache_read_tokens": 42949,
+    "cost_usd_measured": 0.0171479,
+    "cost_usd_agent": 0.008801,
+    "cost_usd_cache": 0.0083469,
+    "latency_s": 23.718485663000138,
+    "llm_latency_s": 23.716829406999977,
+    "error": null,
+    "transcript": [
+      {
+        "step": 1,
+        "llm": {
+          "text": "{\"thought\": \"Query for the maximum intraday range (high minus low) for SHREECEM\", \"tool\": \"run_sql\", \"args\": {\"query\": \"SELECT MAX(high - low) as max_range FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id WHERE i.ticker = 'SHREECEM'\"}}",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 579,
+          "completion_tokens": 1190,
+          "cache_write_tokens": 1131,
+          "cache_read_tokens": 28899,
+          "cost_usd_measured": 0.011680900000000001,
+          "cost_usd_agent": 0.006529,
+          "latency_s": 16.860619803999953,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Query for the maximum intraday range (high minus low) for SHREECEM",
+          "tool": "run_sql",
+          "args": {
+            "query": "SELECT MAX(high - low) as max_range FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id WHERE i.ticker = 'SHREECEM'"
+          }
+        },
+        "tool_result": {
+          "columns": [
+            "max_range"
+          ],
+          "rows": [
+            [
+              2277.219951655363
+            ]
+          ],
+          "row_count": 1
+        }
+      },
+      {
+        "step": 2,
+        "llm": {
+          "text": "```json\n{\"thought\": \"Found the maximum intraday range for SHREECEM by calculating high minus low for each day.\", \"final\": {\"value\": 2277.219951655363, \"sql\": \"SELECT MAX(high - low) as max_range FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id WHERE i.ticker = 'SHREECEM'\"}}\n```",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 667,
+          "completion_tokens": 321,
+          "cache_write_tokens": 895,
+          "cache_read_tokens": 14050,
+          "cost_usd_measured": 0.0054670000000000005,
+          "cost_usd_agent": 0.002272,
+          "latency_s": 6.856209603000025,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Found the maximum intraday range for SHREECEM by calculating high minus low for each day.",
+          "final": {
+            "value": 2277.219951655363,
+            "sql": "SELECT MAX(high - low) as max_range FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id WHERE i.ticker = 'SHREECEM'"
+          }
+        }
+      }
+    ],
+    "tool_call_log": [
+      {
+        "tool": "run_sql",
+        "args": {
+          "query": "SELECT MAX(high - low) as max_range FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id WHERE i.ticker = 'SHREECEM'"
+        },
+        "ok": true,
+        "note": "1 rows"
+      }
+    ]
+  },
+  "grade": {
+    "task_id": "A06",
+    "tier": "aggregation",
+    "expected": 2277.219951655363,
+    "got": 2277.219951655363,
+    "coerced": false,
+    "detail": "",
+    "verdict": "correct",
+    "correct": true
+  }
+}

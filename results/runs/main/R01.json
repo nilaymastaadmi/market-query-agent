@@ -1,17 +1,17 @@
 {
   "task": {
-    "id": "J03",
-    "tier": "join",
-    "answer_type": "string",
+    "id": "R01",
+    "tier": "ranking",
+    "answer_type": "list[string]",
     "tolerance": 0,
-    "question": "Which sector_group contains the largest number of instruments? If two or more sector_groups are tied for the largest count, return whichever of the tied names comes first alphabetically. Return the sector_group.",
-    "gt_key": "sector_group_most_instruments"
+    "question": "Return the tickers of the top 3 instruments by average daily closing price over the whole database, in descending order of that average.",
+    "gt_key": "top3_avg_close"
   },
   "result": {
-    "task_id": "J03",
-    "tier": "join",
-    "question": "Which sector_group contains the largest number of instruments? If two or more sector_groups are tied for the largest count, return whichever of the tied names comes first alphabetically. Return the sector_group.",
-    "answer_type": "string",
+    "task_id": "R01",
+    "tier": "ranking",
+    "question": "Return the tickers of the top 3 instruments by average daily closing price over the whole database, in descending order of that average.",
+    "answer_type": "list[string]",
     "config": {
       "label": "main",
       "schema_mode": "tool",
@@ -20,47 +20,51 @@
     },
     "model": "claude-haiku-4-5-20251001",
     "provider": "claude-cli",
-    "value": "Financials",
-    "cited_sql": "SELECT s.sector_group, COUNT(i.instrument_id) as count\nFROM instruments i\nJOIN sectors s ON i.sector_id = s.sector_id\nGROUP BY s.sector_group\nORDER BY count DESC, s.sector_group ASC\nLIMIT 1",
+    "value": [
+      "SHREECEM",
+      "ALKEM",
+      "PERSISTENT"
+    ],
+    "cited_sql": "SELECT i.ticker, AVG(p.close) as avg_close FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id GROUP BY i.ticker ORDER BY avg_close DESC LIMIT 3",
     "claimed_unanswerable": false,
     "refusal_reason": null,
     "outcome": "answered",
-    "steps_used": 2,
-    "tool_calls": 1,
-    "sql_calls": 0,
+    "steps_used": 3,
+    "tool_calls": 2,
+    "sql_calls": 1,
     "sql_errors": 0,
     "blocked_calls": 0,
     "retries": 0,
     "protocol_violations": 0,
     "transport_retries": 0,
     "rate_limit_hits": 0,
-    "prompt_tokens": 2275,
-    "completion_tokens": 1146,
-    "cache_write_tokens": 3068,
-    "cache_read_tokens": 54177,
-    "cost_usd_measured": 0.0195587,
-    "cost_usd_agent": 0.008005,
-    "cost_usd_cache": 0.0115537,
-    "latency_s": 27.043640783,
-    "llm_latency_s": 27.03859695799997,
+    "prompt_tokens": 4078,
+    "completion_tokens": 1768,
+    "cache_write_tokens": 6851,
+    "cache_read_tokens": 112979,
+    "cost_usd_measured": 0.037917900000000004,
+    "cost_usd_agent": 0.012918,
+    "cost_usd_cache": 0.0249999,
+    "latency_s": 37.390999953999994,
+    "llm_latency_s": 37.37963615600006,
     "error": null,
     "transcript": [
       {
         "step": 1,
         "llm": {
-          "text": "{\"thought\": \"Need to get the database schema first\", \"tool\": \"get_schema\", \"args\": {}}",
+          "text": "```json\n{\"thought\": \"Need to get the database schema to understand the tables and columns available\", \"tool\": \"get_schema\", \"args\": {}}\n```",
           "model": "claude-haiku-4-5-20251001",
-          "prompt_tokens": 604,
-          "completion_tokens": 445,
-          "cache_write_tokens": 1169,
-          "cache_read_tokens": 41090,
-          "cost_usd_measured": 0.009276,
-          "cost_usd_agent": 0.002829,
-          "latency_s": 14.385455576999902,
+          "prompt_tokens": 592,
+          "completion_tokens": 379,
+          "cache_write_tokens": 1129,
+          "cache_read_tokens": 41050,
+          "cost_usd_measured": 0.00885,
+          "cost_usd_agent": 0.002487,
+          "latency_s": 10.479648130999976,
           "error": null
         },
         "parsed": {
-          "thought": "Need to get the database schema first",
+          "thought": "Need to get the database schema to understand the tables and columns available",
           "tool": "get_schema",
           "args": {}
         },
@@ -71,22 +75,69 @@
       {
         "step": 2,
         "llm": {
-          "text": "{\"thought\": \"Financials sector_group has 10 instruments, the maximum\", \"final\": {\"value\": \"Financials\", \"sql\": \"SELECT s.sector_group, COUNT(i.instrument_id) as count\\nFROM instruments i\\nJOIN sectors s ON i.sector_id = s.sector_id\\nGROUP BY s.sector_group\\nORDER BY count DESC, s.sector_group ASC\\nLIMIT 1\"}}",
+          "text": "{\"thought\": \"Query top 3 instruments by average closing price\", \"tool\": \"run_sql\", \"args\": {\"query\": \"SELECT i.ticker, AVG(p.close) as avg_close FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id GROUP BY i.ticker ORDER BY avg_close DESC LIMIT 3\"}}",
           "model": "claude-haiku-4-5-20251001",
-          "prompt_tokens": 1671,
-          "completion_tokens": 701,
-          "cache_write_tokens": 1899,
-          "cache_read_tokens": 13087,
-          "cost_usd_measured": 0.0102827,
-          "cost_usd_agent": 0.005176,
-          "latency_s": 12.653141381000069,
+          "prompt_tokens": 1685,
+          "completion_tokens": 1022,
+          "cache_write_tokens": 3693,
+          "cache_read_tokens": 58842,
+          "cost_usd_measured": 0.020065200000000002,
+          "cost_usd_agent": 0.006795,
+          "latency_s": 19.341616412000008,
           "error": null
         },
         "parsed": {
-          "thought": "Financials sector_group has 10 instruments, the maximum",
+          "thought": "Query top 3 instruments by average closing price",
+          "tool": "run_sql",
+          "args": {
+            "query": "SELECT i.ticker, AVG(p.close) as avg_close FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id GROUP BY i.ticker ORDER BY avg_close DESC LIMIT 3"
+          }
+        },
+        "tool_result": {
+          "columns": [
+            "ticker",
+            "avg_close"
+          ],
+          "rows": [
+            [
+              "SHREECEM",
+              26379.3198907513
+            ],
+            [
+              "ALKEM",
+              4774.255695109285
+            ],
+            [
+              "PERSISTENT",
+              4416.719647202701
+            ]
+          ],
+          "row_count": 3
+        }
+      },
+      {
+        "step": 3,
+        "llm": {
+          "text": "```json\n{\"thought\": \"Top 3 tickers by average daily closing price, ordered descending\", \"final\": {\"value\": [\"SHREECEM\", \"ALKEM\", \"PERSISTENT\"], \"sql\": \"SELECT i.ticker, AVG(p.close) as avg_close FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id GROUP BY i.ticker ORDER BY avg_close DESC LIMIT 3\"}}\n```",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 1801,
+          "completion_tokens": 367,
+          "cache_write_tokens": 2029,
+          "cache_read_tokens": 13087,
+          "cost_usd_measured": 0.0090027,
+          "cost_usd_agent": 0.003636,
+          "latency_s": 7.558371613000077,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Top 3 tickers by average daily closing price, ordered descending",
           "final": {
-            "value": "Financials",
-            "sql": "SELECT s.sector_group, COUNT(i.instrument_id) as count\nFROM instruments i\nJOIN sectors s ON i.sector_id = s.sector_id\nGROUP BY s.sector_group\nORDER BY count DESC, s.sector_group ASC\nLIMIT 1"
+            "value": [
+              "SHREECEM",
+              "ALKEM",
+              "PERSISTENT"
+            ],
+            "sql": "SELECT i.ticker, AVG(p.close) as avg_close FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id GROUP BY i.ticker ORDER BY avg_close DESC LIMIT 3"
           }
         }
       }
@@ -97,15 +148,31 @@
         "args": {},
         "ok": true,
         "note": "3365 chars"
+      },
+      {
+        "tool": "run_sql",
+        "args": {
+          "query": "SELECT i.ticker, AVG(p.close) as avg_close FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id GROUP BY i.ticker ORDER BY avg_close DESC LIMIT 3"
+        },
+        "ok": true,
+        "note": "3 rows"
       }
     ]
   },
   "grade": {
-    "task_id": "J03",
-    "tier": "join",
-    "expected": "Financials",
-    "got": "Financials",
-    "coerced": true,
+    "task_id": "R01",
+    "tier": "ranking",
+    "expected": [
+      "SHREECEM",
+      "ALKEM",
+      "PERSISTENT"
+    ],
+    "got": [
+      "SHREECEM",
+      "ALKEM",
+      "PERSISTENT"
+    ],
+    "coerced": false,
     "detail": "",
     "verdict": "correct",
     "correct": true

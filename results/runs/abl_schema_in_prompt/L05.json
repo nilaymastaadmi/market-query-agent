@@ -1,0 +1,125 @@
+{
+  "task": {
+    "id": "L05",
+    "tier": "lookup",
+    "answer_type": "integer",
+    "tolerance": 0,
+    "question": "How many distinct sectors are represented in the sectors table?",
+    "gt_key": "n_sectors"
+  },
+  "result": {
+    "task_id": "L05",
+    "tier": "lookup",
+    "question": "How many distinct sectors are represented in the sectors table?",
+    "answer_type": "integer",
+    "config": {
+      "label": "abl_schema_in_prompt",
+      "schema_mode": "prompt",
+      "retry_on_sql_error": true,
+      "max_steps": 8
+    },
+    "model": "claude-haiku-4-5-20251001",
+    "provider": "claude-cli",
+    "value": 14,
+    "cited_sql": "SELECT COUNT(*) FROM sectors;",
+    "claimed_unanswerable": false,
+    "refusal_reason": null,
+    "outcome": "answered",
+    "steps_used": 2,
+    "tool_calls": 1,
+    "sql_calls": 1,
+    "sql_errors": 0,
+    "blocked_calls": 0,
+    "retries": 0,
+    "protocol_violations": 0,
+    "transport_retries": 0,
+    "rate_limit_hits": 0,
+    "prompt_tokens": 1174,
+    "completion_tokens": 825,
+    "cache_write_tokens": 1869,
+    "cache_read_tokens": 42933,
+    "cost_usd_measured": 0.0133303,
+    "cost_usd_agent": 0.005299,
+    "cost_usd_cache": 0.0080313,
+    "latency_s": 19.89521663200003,
+    "llm_latency_s": 19.894289968000066,
+    "error": null,
+    "transcript": [
+      {
+        "step": 1,
+        "llm": {
+          "text": "{\"thought\": \"Count the number of sectors in the sectors table\", \"tool\": \"run_sql\", \"args\": {\"query\": \"SELECT COUNT(*) FROM sectors;\"}}",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 563,
+          "completion_tokens": 606,
+          "cache_write_tokens": 1030,
+          "cache_read_tokens": 28883,
+          "cost_usd_measured": 0.0085413,
+          "cost_usd_agent": 0.003593,
+          "latency_s": 12.922379136000018,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Count the number of sectors in the sectors table",
+          "tool": "run_sql",
+          "args": {
+            "query": "SELECT COUNT(*) FROM sectors;"
+          }
+        },
+        "tool_result": {
+          "columns": [
+            "COUNT(*)"
+          ],
+          "rows": [
+            [
+              14
+            ]
+          ],
+          "row_count": 1
+        }
+      },
+      {
+        "step": 2,
+        "llm": {
+          "text": "{\"thought\": \"Count all rows in the sectors table to get the number of distinct sectors.\", \"final\": {\"value\": 14, \"sql\": \"SELECT COUNT(*) FROM sectors;\"}}",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 611,
+          "completion_tokens": 219,
+          "cache_write_tokens": 839,
+          "cache_read_tokens": 14050,
+          "cost_usd_measured": 0.004789,
+          "cost_usd_agent": 0.001706,
+          "latency_s": 6.971910832000049,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Count all rows in the sectors table to get the number of distinct sectors.",
+          "final": {
+            "value": 14,
+            "sql": "SELECT COUNT(*) FROM sectors;"
+          }
+        }
+      }
+    ],
+    "tool_call_log": [
+      {
+        "tool": "run_sql",
+        "args": {
+          "query": "SELECT COUNT(*) FROM sectors"
+        },
+        "ok": true,
+        "note": "1 rows"
+      }
+    ]
+  },
+  "grade": {
+    "task_id": "L05",
+    "tier": "lookup",
+    "expected": 14,
+    "got": 14,
+    "coerced": false,
+    "detail": "",
+    "verdict": "correct",
+    "correct": true
+  }
+}

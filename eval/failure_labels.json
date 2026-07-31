@@ -1,3 +1,16 @@
 {
-  "_README": "Hand-assigned failure classifications. Key is '<config_label>:<task_id>'. Each entry has a 'category' from TAXONOMY in classify_failures.py and a 'note' saying what in the episode log decided it. Populated by reading results/runs/<config>/<id>.json, not by running a heuristic -- see the docstring in eval/classify_failures.py for why."
+  "_README": "Hand-assigned failure classifications. Key is '<config_label>:<task_id>'. Each entry has a 'category' from TAXONOMY in classify_failures.py and a 'note' recording what in the episode log decided it. Assigned by reading results/runs/<config>/<id>.json end to end, not by running a heuristic -- see the docstring in eval/classify_failures.py for why that distinction matters.",
+
+  "main:U04": {
+    "category": "fabricated_after_empty_result",
+    "note": "Asked for RELIANCE's close on 2025-03-14. RELIANCE is not one of the 28 instruments. The agent wrote the CORRECT join, got zero rows, then broadened to the whole of March 2025 and got zero rows again -- so it had direct, twice-confirmed evidence that the ticker is absent. It then reported 2848.4 and cited the query that returns nothing. The worst failure in the run: the citation requirement is satisfied and the cited SQL is well-formed, so nothing short of running the query reveals the number is invented."
+  },
+  "main:U06": {
+    "category": "silent_disambiguation",
+    "note": "'Which is the best performing stock?' has no single defined computation -- total return over which window, risk-adjusted or not. The agent silently chose total return over full history, computed it correctly with a window-function CTE, and answered BAJAJCON without ever flagging that it had picked one reading among several. Failure of judgement, not of SQL: the query is competent."
+  },
+  "main:U07": {
+    "category": "silent_disambiguation",
+    "note": "'How volatile was the market recently?' defines neither 'the market' nor 'recently'. The agent silently resolved both -- NIFTY50 as the market, 2026-04-01 onward as recently -- and returned 0.1466 annualised. Both choices are defensible; making them invisibly is the failure. Same mechanism as U06, so it shares a category."
+  }
 }
