@@ -1,0 +1,40 @@
+{
+  "provider": "claude-cli",
+  "model": "claude-haiku-4-5-20251001",
+  "repeats": 3,
+  "runs": [
+    {
+      "prompt_tokens": 10,
+      "completion_tokens": 45,
+      "cache_write_tokens": 12886,
+      "cache_read_tokens": 0,
+      "cost_usd_measured": 0.026007,
+      "cost_usd_agent": 0.00023500000000000002,
+      "latency_s": 13.471239185000002,
+      "error": null
+    },
+    {
+      "prompt_tokens": 10,
+      "completion_tokens": 90,
+      "cache_write_tokens": 0,
+      "cache_read_tokens": 12886,
+      "cost_usd_measured": 0.0017486000000000001,
+      "cost_usd_agent": 0.00046000000000000007,
+      "latency_s": 7.8442120149999965,
+      "error": null
+    },
+    {
+      "prompt_tokens": 10,
+      "completion_tokens": 56,
+      "cache_write_tokens": 0,
+      "cache_read_tokens": 12886,
+      "cost_usd_measured": 0.0015785999999999999,
+      "cost_usd_agent": 0.00029,
+      "latency_s": 4.752054156000014,
+      "error": null
+    }
+  ],
+  "mean_overhead_tokens": 12886.0,
+  "mean_cost_usd_measured": 0.009778066666666667,
+  "mean_latency_s": 8.689168452000004
+}

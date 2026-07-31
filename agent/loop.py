@@ -76,6 +76,7 @@ class TaskResult:
     retries: int = 0  # SQL calls issued after seeing an error
     protocol_violations: int = 0
     transport_retries: int = 0  # provider-level flakes, not agent behaviour
+    rate_limit_hits: int = 0    # HTTP 429s absorbed by provider backoff
 
     prompt_tokens: int = 0
     completion_tokens: int = 0
@@ -280,6 +281,7 @@ def run_task(
 
     res.latency_s = time.monotonic() - t_start
     res.transport_retries = getattr(provider, "transport_retry_count", 0)
+    res.rate_limit_hits = getattr(provider, "rate_limit_hits", 0)
     # Transport overhead priced separately so a cost table can show both.
     res.cost_usd_cache = price_cache(
         res.model, res.cache_write_tokens, res.cache_read_tokens, ttl="1h"

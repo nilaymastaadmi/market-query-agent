@@ -161,6 +161,15 @@ class ClaudeCLIProvider(LLMProvider):
         "TodoWrite NotebookEdit BashOutput KillShell SlashCommand Skill"
     ).split()
 
+    # A 429 needs a real backoff, not the short one that suits a flaky pipe.
+    # Discovered the hard way: a first attempt at the full benchmark with 4
+    # workers rate-limited almost every task, and the 1.5s retry was useless
+    # against it. The whole run reported ~0% accuracy for a reason that had
+    # nothing to do with the agent -- which is precisely the kind of number this
+    # project exists not to publish.
+    RATE_LIMIT_BACKOFF_S = (20.0, 45.0, 90.0, 150.0)
+    FLAKE_BACKOFF_S = (2.0, 5.0)
+
     def __init__(self, model: str = "claude-haiku-4-5-20251001", timeout_s: float = 240.0,
                  transport_retries: int = 2):
         if shutil.which("claude") is None:
@@ -172,6 +181,7 @@ class ClaudeCLIProvider(LLMProvider):
         self.timeout_s = timeout_s
         self.transport_retries = transport_retries
         self.transport_retry_count = 0
+        self.rate_limit_hits = 0
 
     @property
     def model_id(self) -> str:
@@ -191,14 +201,26 @@ class ClaudeCLIProvider(LLMProvider):
         laundered away.
         """
         last = None
-        for attempt in range(self.transport_retries + 1):
+        rl_attempt = 0
+        flake_attempt = 0
+        while True:
             last = self._call_once(system, transcript)
             if not last.error:
                 return last
-            if attempt < self.transport_retries:
-                self.transport_retry_count += 1
-                time.sleep(1.5 * (attempt + 1))
-        return last
+            is_429 = "api_error_status=429" in (last.error or "")
+            if is_429:
+                if rl_attempt >= len(self.RATE_LIMIT_BACKOFF_S):
+                    return last
+                delay = self.RATE_LIMIT_BACKOFF_S[rl_attempt]
+                rl_attempt += 1
+                self.rate_limit_hits += 1
+            else:
+                if flake_attempt >= len(self.FLAKE_BACKOFF_S):
+                    return last
+                delay = self.FLAKE_BACKOFF_S[flake_attempt]
+                flake_attempt += 1
+            self.transport_retry_count += 1
+            time.sleep(delay)
 
     def _call_once(self, system: str, transcript: str) -> LLMResponse:
         cmd = [
