@@ -1,0 +1,154 @@
+{
+  "task": {
+    "id": "A08",
+    "tier": "aggregation",
+    "answer_type": "string",
+    "tolerance": 0,
+    "question": "On which date did ticker 'BAJAJCON' record its highest closing price? Return the date as a 'YYYY-MM-DD' string.",
+    "gt_key": "date_max_close_bajajcon"
+  },
+  "result": {
+    "task_id": "A08",
+    "tier": "aggregation",
+    "question": "On which date did ticker 'BAJAJCON' record its highest closing price? Return the date as a 'YYYY-MM-DD' string.",
+    "answer_type": "string",
+    "config": {
+      "label": "abl_no_retry",
+      "schema_mode": "tool",
+      "retry_on_sql_error": false,
+      "max_steps": 8
+    },
+    "model": "claude-haiku-4-5-20251001",
+    "provider": "claude-cli",
+    "value": "2026-06-19",
+    "cited_sql": "SELECT date FROM prices WHERE instrument_id = (SELECT instrument_id FROM instruments WHERE ticker = 'BAJAJCON') ORDER BY close DESC LIMIT 1",
+    "claimed_unanswerable": false,
+    "refusal_reason": null,
+    "outcome": "answered",
+    "steps_used": 3,
+    "tool_calls": 2,
+    "sql_calls": 1,
+    "sql_errors": 0,
+    "blocked_calls": 0,
+    "retries": 0,
+    "protocol_violations": 0,
+    "transport_retries": 0,
+    "rate_limit_hits": 0,
+    "prompt_tokens": 4013,
+    "completion_tokens": 1337,
+    "cache_write_tokens": 2769,
+    "cache_read_tokens": 84943,
+    "cost_usd_measured": 0.0247303,
+    "cost_usd_agent": 0.010698,
+    "cost_usd_cache": 0.014032300000000001,
+    "latency_s": 29.541507462000027,
+    "llm_latency_s": 29.521414617999653,
+    "error": null,
+    "transcript": [
+      {
+        "step": 1,
+        "llm": {
+          "text": "{\"thought\": \"I need to get the database schema first to understand the table structure for price data.\", \"tool\": \"get_schema\", \"args\": {}}",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 594,
+          "completion_tokens": 561,
+          "cache_write_tokens": 425,
+          "cache_read_tokens": 41904,
+          "cost_usd_measured": 0.008439400000000001,
+          "cost_usd_agent": 0.0033989999999999997,
+          "latency_s": 11.656072229000074,
+          "error": null
+        },
+        "parsed": {
+          "thought": "I need to get the database schema first to understand the table structure for price data.",
+          "tool": "get_schema",
+          "args": {}
+        },
+        "tool_result": {
+          "schema": "DATABASE: Indian equity daily OHLCV (NSE), SQLite, read-only.\n\nTABLE sectors\n    sector_id     INTEGER  PRIMARY KEY\n    sector_name   TEXT     NOT NULL UNIQUE   -- e.g. 'IT_Services', 'Private_Banks'\n    sector_group  TEXT     NOT NULL          -- coarser grouping, e.g. 'Financials'\n\nTABLE instruments\n    instrument_id INTEGER  PRIMARY KEY\n    ticker        TEXT     NOT NULL UNIQUE   -- NSE symbol without suffix, e.g. 'TCS'\n    name          TEXT     NOT NULL          -- registered company name\n    sector_id     INTEGER  NOT NULL          -> REFERENCES sectors(sector_id)\n    cap_tier      TEXT     NOT NULL          -- one of 'LARGE', 'MID', 'SMALL'\n    exchange      TEXT     NOT NULL          -- always 'NSE'\n    currency      TEXT     NOT NULL          -- always 'INR'\n\nTABLE prices\n    instrument_id INTEGER  NOT NULL          -> REFERENCES instruments(instrument_id)\n    date          TEXT     NOT NULL          -- 'YYYY-MM-DD'\n    open          REAL     NOT NULL\n    high          REAL     NOT NULL\n    low           REAL     NOT NULL\n    close         REAL     NOT NULL\n    volume        INTEGER  NOT NULL          -- shares traded\n    PRIMARY KEY (instrument_id, date)\n\nTABLE index_prices\n    index_code    TEXT     NOT NULL          -- only 'NIFTY50'\n    date          TEXT     NOT NULL\n    open, high, low, close  REAL NOT NULL\n    volume        INTEGER  NOT NULL          -- always 0 for the index; do not use\n    PRIMARY KEY (index_code, date)\n    -- no foreign key: an index is not an instrument in this schema\n\nINDEXES\n    prices(instrument_id, date)  [primary key]\n    prices(date)\n    instruments(ticker)          [unique]\n    instruments(sector_id)\n    instruments(cap_tier)\n    index_prices(index_code, date) [primary key]\n    index_prices(date)\n\nRELATIONSHIPS\n    sectors 1---N instruments 1---N prices\n    prices has NO ticker column. To filter or group by ticker, sector or\n    cap tier you MUST join prices to instruments on instrument_id, and\n    join instruments to sectors on sector_id for sector_name/sector_group.\n\nWHAT IS *NOT* IN THIS DATABASE\n    No fundamentals (no earnings, P/E, revenue, market-cap values, book value).\n    No dividends or corporate-action records as separate rows: prices are\n      already split/bonus/dividend adjusted (auto_adjust=True at download).\n    No intraday or tick data; daily bars only.\n    No shares outstanding or free float, so absolute market capitalisation\n      cannot be computed -- cap_tier is a categorical label, not a number.\n    No analyst estimates, news, sentiment, or index constituent weights.\n    No instruments outside the 28 in `instruments`, and no dates outside\n      the range reported below.\n\nMETRIC CONVENTIONS used by compute_metric (and by the benchmark's ground truth)\n    daily return   r_t = close_t / close_{t-1} - 1   (simple returns)\n    total_return   close_last / close_first - 1\n    cagr           (1 + total_return) ** (252 / n_returns) - 1\n    ann_volatility stdev(r, ddof=1) * sqrt(252)\n    max_drawdown   min(close / cummax(close) - 1)    (a negative number)\n    sharpe         (mean(r) * 252 - 0.065) / (stdev(r, ddof=1) * sqrt(252))\n    TRADING_DAYS = 252, annual risk-free rate RF = 0.065\n\nCOVERAGE\n    28 instruments, 14 sectors, 24,243 price rows, dates 2023-01-02 to 2026-07-03 inclusive.\n    run_sql returns at most 200 rows and times out after 5s.\n"
+        }
+      },
+      {
+        "step": 2,
+        "llm": {
+          "text": "{\"thought\": \"Find the date with the highest closing price for BAJAJCON\", \"tool\": \"run_sql\", \"args\": {\"query\": \"SELECT date FROM prices WHERE instrument_id = (SELECT instrument_id FROM instruments WHERE ticker = 'BAJAJCON') ORDER BY close DESC LIMIT 1\"}}",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 1669,
+          "completion_tokens": 503,
+          "cache_write_tokens": 366,
+          "cache_read_tokens": 29952,
+          "cost_usd_measured": 0.0079112,
+          "cost_usd_agent": 0.004184,
+          "latency_s": 10.654940601999897,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Find the date with the highest closing price for BAJAJCON",
+          "tool": "run_sql",
+          "args": {
+            "query": "SELECT date FROM prices WHERE instrument_id = (SELECT instrument_id FROM instruments WHERE ticker = 'BAJAJCON') ORDER BY close DESC LIMIT 1"
+          }
+        },
+        "tool_result": {
+          "columns": [
+            "date"
+          ],
+          "rows": [
+            [
+              "2026-06-19"
+            ]
+          ],
+          "row_count": 1
+        }
+      },
+      {
+        "step": 3,
+        "llm": {
+          "text": "```json\n{\n  \"thought\": \"Found the date when BAJAJCON had its highest closing price by ordering prices descending and taking the first result.\",\n  \"final\": {\n    \"value\": \"2026-06-19\",\n    \"sql\": \"SELECT date FROM prices WHERE instrument_id = (SELECT instrument_id FROM instruments WHERE ticker = 'BAJAJCON') ORDER BY close DESC LIMIT 1\"\n  }\n}\n```",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 1750,
+          "completion_tokens": 273,
+          "cache_write_tokens": 1978,
+          "cache_read_tokens": 13087,
+          "cost_usd_measured": 0.0083797,
+          "cost_usd_agent": 0.003115,
+          "latency_s": 7.210401786999682,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Found the date when BAJAJCON had its highest closing price by ordering prices descending and taking the first result.",
+          "final": {
+            "value": "2026-06-19",
+            "sql": "SELECT date FROM prices WHERE instrument_id = (SELECT instrument_id FROM instruments WHERE ticker = 'BAJAJCON') ORDER BY close DESC LIMIT 1"
+          }
+        }
+      }
+    ],
+    "tool_call_log": [
+      {
+        "tool": "get_schema",
+        "args": {},
+        "ok": true,
+        "note": "3365 chars"
+      },
+      {
+        "tool": "run_sql",
+        "args": {
+          "query": "SELECT date FROM prices WHERE instrument_id = (SELECT instrument_id FROM instruments WHERE ticker = 'BAJAJCON') ORDER BY close DESC LIMIT 1"
+        },
+        "ok": true,
+        "note": "1 rows"
+      }
+    ]
+  },
+  "grade": {
+    "task_id": "A08",
+    "tier": "aggregation",
+    "expected": "2026-06-19",
+    "got": "2026-06-19",
+    "coerced": false,
+    "detail": "",
+    "verdict": "correct",
+    "correct": true
+  }
+}

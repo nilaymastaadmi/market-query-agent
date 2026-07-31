@@ -1,6 +1,5 @@
 {
   "_README": "Hand-assigned failure classifications. Key is '<config_label>:<task_id>'. Each entry has a 'category' from TAXONOMY in classify_failures.py and a 'note' recording what in the episode log decided it. Assigned by reading results/runs/<config>/<id>.json end to end, not by running a heuristic -- see the docstring in eval/classify_failures.py for why that distinction matters.",
-
   "main:U04": {
     "category": "fabricated_after_empty_result",
     "note": "Asked for RELIANCE's close on 2025-03-14. RELIANCE is not one of the 28 instruments. The agent wrote the CORRECT join, got zero rows, then broadened to the whole of March 2025 and got zero rows again -- so it had direct, twice-confirmed evidence that the ticker is absent. It then reported 2848.4 and cited the query that returns nothing. The worst failure in the run: the citation requirement is satisfied and the cited SQL is well-formed, so nothing short of running the query reveals the number is invented."
@@ -12,5 +11,21 @@
   "main:U07": {
     "category": "silent_disambiguation",
     "note": "'How volatile was the market recently?' defines neither 'the market' nor 'recently'. The agent silently resolved both -- NIFTY50 as the market, 2026-04-01 onward as recently -- and returned 0.1466 annualised. Both choices are defensible; making them invisibly is the failure. Same mechanism as U06, so it shares a category."
+  },
+  "abl_schema_in_prompt:J06": {
+    "category": "arithmetic_slip",
+    "note": "Ratio of NIFTY50 close to the cross-sectional average close on 2024-06-28. The SQL is structurally correct (two scalar subqueries) but the result is 8.89675 against 8.89552, a 0.014% relative miss. Not root-caused; the shape of the query is right, so the divergence is in the computed value rather than the logic. Recorded as an arithmetic slip rather than guessed at."
+  },
+  "abl_schema_in_prompt:T07": {
+    "category": "arithmetic_slip",
+    "note": "NIFTY50 total return for 2025. The CTE filters `date LIKE '2025-%'` and takes first/last by date, which is the right shape, but returns 0.100422 against 0.100523 -- a 0.1% relative miss. Same character as J06: correct structure, value slightly off, not root-caused."
+  },
+  "abl_schema_in_prompt:U06": {
+    "category": "silent_disambiguation",
+    "note": "Same failure as main:U06 -- silently picked one reading of 'best performing' and answered BAJAJCON without flagging the choice. Reproduces across configurations, so it is a property of the model's judgement rather than of the schema-delivery mode."
+  },
+  "abl_schema_in_prompt:U07": {
+    "category": "silent_disambiguation",
+    "note": "Same failure as main:U07 -- silently defined 'the market' and 'recently' and returned an annualised volatility. Also reproduces across configurations."
   }
 }

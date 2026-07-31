@@ -1,0 +1,125 @@
+{
+  "task": {
+    "id": "T01",
+    "tier": "timewindow",
+    "answer_type": "number",
+    "tolerance": 0.0001,
+    "question": "What was the total return of ticker 'TCS' over calendar year 2024? Define total return as (last close in 2024 / first close in 2024) - 1. Return a fraction, not a percentage.",
+    "gt_key": "total_return_tcs_2024"
+  },
+  "result": {
+    "task_id": "T01",
+    "tier": "timewindow",
+    "question": "What was the total return of ticker 'TCS' over calendar year 2024? Define total return as (last close in 2024 / first close in 2024) - 1. Return a fraction, not a percentage.",
+    "answer_type": "number",
+    "config": {
+      "label": "abl_schema_in_prompt",
+      "schema_mode": "prompt",
+      "retry_on_sql_error": true,
+      "max_steps": 8
+    },
+    "model": "claude-haiku-4-5-20251001",
+    "provider": "claude-cli",
+    "value": 0.09498529145712342,
+    "cited_sql": "WITH tcs_prices AS (SELECT date, close FROM prices WHERE instrument_id = (SELECT instrument_id FROM instruments WHERE ticker = 'TCS') AND date >= '2024-01-01' AND date <= '2024-12-31') SELECT (SELECT close FROM tcs_prices ORDER BY date DESC LIMIT 1) / (SELECT close FROM tcs_prices ORDER BY date ASC LIMIT 1) - 1 AS total_return",
+    "claimed_unanswerable": false,
+    "refusal_reason": null,
+    "outcome": "answered",
+    "steps_used": 2,
+    "tool_calls": 1,
+    "sql_calls": 1,
+    "sql_errors": 0,
+    "blocked_calls": 0,
+    "retries": 0,
+    "protocol_violations": 0,
+    "transport_retries": 0,
+    "rate_limit_hits": 0,
+    "prompt_tokens": 1363,
+    "completion_tokens": 3038,
+    "cache_write_tokens": 3497,
+    "cache_read_tokens": 58940,
+    "cost_usd_measured": 0.029441000000000002,
+    "cost_usd_agent": 0.016553000000000002,
+    "cost_usd_cache": 0.012888,
+    "latency_s": 41.251323777999914,
+    "llm_latency_s": 41.24970268400011,
+    "error": null,
+    "transcript": [
+      {
+        "step": 1,
+        "llm": {
+          "text": "I need to output the query in the format specified by the instructions:\n\n```json\n{\"thought\": \"Finding TCS closing prices at the start and end of 2024 to calculate total return\", \"tool\": \"run_sql\", \"args\": {\"query\": \"WITH tcs_prices AS (SELECT date, close FROM prices WHERE instrument_id = (SELECT instrument_id FROM instruments WHERE ticker = 'TCS') AND date >= '2024-01-01' AND date <= '2024-12-31') SELECT (SELECT close FROM tcs_prices ORDER BY date DESC LIMIT 1) / (SELECT close FROM tcs_prices ORDER BY date ASC LIMIT 1) - 1 AS total_return\"}}\n```",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 611,
+          "completion_tokens": 2599,
+          "cache_write_tokens": 2517,
+          "cache_read_tokens": 44890,
+          "cost_usd_measured": 0.023129,
+          "cost_usd_agent": 0.013606000000000002,
+          "latency_s": 32.805349504000105,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Finding TCS closing prices at the start and end of 2024 to calculate total return",
+          "tool": "run_sql",
+          "args": {
+            "query": "WITH tcs_prices AS (SELECT date, close FROM prices WHERE instrument_id = (SELECT instrument_id FROM instruments WHERE ticker = 'TCS') AND date >= '2024-01-01' AND date <= '2024-12-31') SELECT (SELECT close FROM tcs_prices ORDER BY date DESC LIMIT 1) / (SELECT close FROM tcs_prices ORDER BY date ASC LIMIT 1) - 1 AS total_return"
+          }
+        },
+        "tool_result": {
+          "columns": [
+            "total_return"
+          ],
+          "rows": [
+            [
+              0.09498529145712342
+            ]
+          ],
+          "row_count": 1
+        }
+      },
+      {
+        "step": 2,
+        "llm": {
+          "text": "{\"thought\": \"Query executed successfully to calculate TCS total return in 2024\", \"final\": {\"value\": 0.09498529145712342, \"sql\": \"WITH tcs_prices AS (SELECT date, close FROM prices WHERE instrument_id = (SELECT instrument_id FROM instruments WHERE ticker = 'TCS') AND date >= '2024-01-01' AND date <= '2024-12-31') SELECT (SELECT close FROM tcs_prices ORDER BY date DESC LIMIT 1) / (SELECT close FROM tcs_prices ORDER BY date ASC LIMIT 1) - 1 AS total_return\"}}",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 752,
+          "completion_tokens": 439,
+          "cache_write_tokens": 980,
+          "cache_read_tokens": 14050,
+          "cost_usd_measured": 0.006312,
+          "cost_usd_agent": 0.002947,
+          "latency_s": 8.444353180000007,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Query executed successfully to calculate TCS total return in 2024",
+          "final": {
+            "value": 0.09498529145712342,
+            "sql": "WITH tcs_prices AS (SELECT date, close FROM prices WHERE instrument_id = (SELECT instrument_id FROM instruments WHERE ticker = 'TCS') AND date >= '2024-01-01' AND date <= '2024-12-31') SELECT (SELECT close FROM tcs_prices ORDER BY date DESC LIMIT 1) / (SELECT close FROM tcs_prices ORDER BY date ASC LIMIT 1) - 1 AS total_return"
+          }
+        }
+      }
+    ],
+    "tool_call_log": [
+      {
+        "tool": "run_sql",
+        "args": {
+          "query": "WITH tcs_prices AS (SELECT date, close FROM prices WHERE instrument_id = (SELECT instrument_id FROM instruments WHERE ticker = 'TCS') AND date >= '2024-01-01' AND date <= '2024-12-31') SELECT (SELECT close FROM tcs_prices ORDER BY date DESC LIMIT 1) / (SELECT close FROM tcs_prices ORDER BY date ASC LIMIT 1) - 1 AS total_return"
+        },
+        "ok": true,
+        "note": "1 rows"
+      }
+    ]
+  },
+  "grade": {
+    "task_id": "T01",
+    "tier": "timewindow",
+    "expected": 0.09498529145712342,
+    "got": 0.09498529145712342,
+    "coerced": false,
+    "detail": "",
+    "verdict": "correct",
+    "correct": true
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "task": {
+    "id": "L05",
+    "tier": "lookup",
+    "answer_type": "integer",
+    "tolerance": 0,
+    "question": "How many distinct sectors are represented in the sectors table?",
+    "gt_key": "n_sectors"
+  },
+  "result": {
+    "task_id": "L05",
+    "tier": "lookup",
+    "question": "How many distinct sectors are represented in the sectors table?",
+    "answer_type": "integer",
+    "config": {
+      "label": "abl_no_retry",
+      "schema_mode": "tool",
+      "retry_on_sql_error": false,
+      "max_steps": 8
+    },
+    "model": "claude-haiku-4-5-20251001",
+    "provider": "claude-cli",
+    "value": 14,
+    "cited_sql": "SELECT COUNT(*) as distinct_sectors FROM sectors",
+    "claimed_unanswerable": false,
+    "refusal_reason": null,
+    "outcome": "answered",
+    "steps_used": 3,
+    "tool_calls": 2,
+    "sql_calls": 1,
+    "sql_errors": 0,
+    "blocked_calls": 0,
+    "retries": 0,
+    "protocol_violations": 0,
+    "transport_retries": 0,
+    "rate_limit_hits": 0,
+    "prompt_tokens": 3923,
+    "completion_tokens": 1690,
+    "cache_write_tokens": 2700,
+    "cache_read_tokens": 98952,
+    "cost_usd_measured": 0.027668200000000004,
+    "cost_usd_agent": 0.012372999999999999,
+    "cost_usd_cache": 0.0152952,
+    "latency_s": 36.216053472999874,
+    "llm_latency_s": 36.207413394000014,
+    "error": null,
+    "transcript": [
+      {
+        "step": 1,
+        "llm": {
+          "text": "{\"thought\": \"I need to fetch the schema first to understand the structure of the sectors table\", \"tool\": \"get_schema\", \"args\": {}}",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 579,
+          "completion_tokens": 1045,
+          "cache_write_tokens": 492,
+          "cache_read_tokens": 55959,
+          "cost_usd_measured": 0.012383900000000002,
+          "cost_usd_agent": 0.005803999999999999,
+          "latency_s": 19.492796577000036,
+          "error": null
+        },
+        "parsed": {
+          "thought": "I need to fetch the schema first to understand the structure of the sectors table",
+          "tool": "get_schema",
+          "args": {}
+        },
+        "tool_result": {
+          "schema": "DATABASE: Indian equity daily OHLCV (NSE), SQLite, read-only.\n\nTABLE sectors\n    sector_id     INTEGER  PRIMARY KEY\n    sector_name   TEXT     NOT NULL UNIQUE   -- e.g. 'IT_Services', 'Private_Banks'\n    sector_group  TEXT     NOT NULL          -- coarser grouping, e.g. 'Financials'\n\nTABLE instruments\n    instrument_id INTEGER  PRIMARY KEY\n    ticker        TEXT     NOT NULL UNIQUE   -- NSE symbol without suffix, e.g. 'TCS'\n    name          TEXT     NOT NULL          -- registered company name\n    sector_id     INTEGER  NOT NULL          -> REFERENCES sectors(sector_id)\n    cap_tier      TEXT     NOT NULL          -- one of 'LARGE', 'MID', 'SMALL'\n    exchange      TEXT     NOT NULL          -- always 'NSE'\n    currency      TEXT     NOT NULL          -- always 'INR'\n\nTABLE prices\n    instrument_id INTEGER  NOT NULL          -> REFERENCES instruments(instrument_id)\n    date          TEXT     NOT NULL          -- 'YYYY-MM-DD'\n    open          REAL     NOT NULL\n    high          REAL     NOT NULL\n    low           REAL     NOT NULL\n    close         REAL     NOT NULL\n    volume        INTEGER  NOT NULL          -- shares traded\n    PRIMARY KEY (instrument_id, date)\n\nTABLE index_prices\n    index_code    TEXT     NOT NULL          -- only 'NIFTY50'\n    date          TEXT     NOT NULL\n    open, high, low, close  REAL NOT NULL\n    volume        INTEGER  NOT NULL          -- always 0 for the index; do not use\n    PRIMARY KEY (index_code, date)\n    -- no foreign key: an index is not an instrument in this schema\n\nINDEXES\n    prices(instrument_id, date)  [primary key]\n    prices(date)\n    instruments(ticker)          [unique]\n    instruments(sector_id)\n    instruments(cap_tier)\n    index_prices(index_code, date) [primary key]\n    index_prices(date)\n\nRELATIONSHIPS\n    sectors 1---N instruments 1---N prices\n    prices has NO ticker column. To filter or group by ticker, sector or\n    cap tier you MUST join prices to instruments on instrument_id, and\n    join instruments to sectors on sector_id for sector_name/sector_group.\n\nWHAT IS *NOT* IN THIS DATABASE\n    No fundamentals (no earnings, P/E, revenue, market-cap values, book value).\n    No dividends or corporate-action records as separate rows: prices are\n      already split/bonus/dividend adjusted (auto_adjust=True at download).\n    No intraday or tick data; daily bars only.\n    No shares outstanding or free float, so absolute market capitalisation\n      cannot be computed -- cap_tier is a categorical label, not a number.\n    No analyst estimates, news, sentiment, or index constituent weights.\n    No instruments outside the 28 in `instruments`, and no dates outside\n      the range reported below.\n\nMETRIC CONVENTIONS used by compute_metric (and by the benchmark's ground truth)\n    daily return   r_t = close_t / close_{t-1} - 1   (simple returns)\n    total_return   close_last / close_first - 1\n    cagr           (1 + total_return) ** (252 / n_returns) - 1\n    ann_volatility stdev(r, ddof=1) * sqrt(252)\n    max_drawdown   min(close / cummax(close) - 1)    (a negative number)\n    sharpe         (mean(r) * 252 - 0.065) / (stdev(r, ddof=1) * sqrt(252))\n    TRADING_DAYS = 252, annual risk-free rate RF = 0.065\n\nCOVERAGE\n    28 instruments, 14 sectors, 24,243 price rows, dates 2023-01-02 to 2026-07-03 inclusive.\n    run_sql returns at most 200 rows and times out after 5s.\n"
+        }
+      },
+      {
+        "step": 2,
+        "llm": {
+          "text": "{\"thought\": \"Count the total number of rows in the sectors table\", \"tool\": \"run_sql\", \"args\": {\"query\": \"SELECT COUNT(*) as distinct_sectors FROM sectors\"}}",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 1646,
+          "completion_tokens": 437,
+          "cache_write_tokens": 282,
+          "cache_read_tokens": 29906,
+          "cost_usd_measured": 0.0073856,
+          "cost_usd_agent": 0.0038309999999999998,
+          "latency_s": 9.814096696999968,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Count the total number of rows in the sectors table",
+          "tool": "run_sql",
+          "args": {
+            "query": "SELECT COUNT(*) as distinct_sectors FROM sectors"
+          }
+        },
+        "tool_result": {
+          "columns": [
+            "distinct_sectors"
+          ],
+          "rows": [
+            [
+              14
+            ]
+          ],
+          "row_count": 1
+        }
+      },
+      {
+        "step": 3,
+        "llm": {
+          "text": "```json\n{\"thought\": \"Counting rows in the sectors table gives the number of distinct sectors\", \"final\": {\"value\": 14, \"sql\": \"SELECT COUNT(*) as distinct_sectors FROM sectors\"}}\n```",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 1698,
+          "completion_tokens": 208,
+          "cache_write_tokens": 1926,
+          "cache_read_tokens": 13087,
+          "cost_usd_measured": 0.0078987,
+          "cost_usd_agent": 0.002738,
+          "latency_s": 6.90052012000001,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Counting rows in the sectors table gives the number of distinct sectors",
+          "final": {
+            "value": 14,
+            "sql": "SELECT COUNT(*) as distinct_sectors FROM sectors"
+          }
+        }
+      }
+    ],
+    "tool_call_log": [
+      {
+        "tool": "get_schema",
+        "args": {},
+        "ok": true,
+        "note": "3365 chars"
+      },
+      {
+        "tool": "run_sql",
+        "args": {
+          "query": "SELECT COUNT(*) as distinct_sectors FROM sectors"
+        },
+        "ok": true,
+        "note": "1 rows"
+      }
+    ]
+  },
+  "grade": {
+    "task_id": "L05",
+    "tier": "lookup",
+    "expected": 14,
+    "got": 14,
+    "coerced": false,
+    "detail": "",
+    "verdict": "correct",
+    "correct": true
+  }
+}

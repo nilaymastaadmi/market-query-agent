@@ -1,0 +1,125 @@
+{
+  "task": {
+    "id": "T06",
+    "tier": "timewindow",
+    "answer_type": "integer",
+    "tolerance": 0,
+    "question": "How many trading days does the database hold for ticker 'GRASIM' between 2025-01-01 and 2025-06-30 inclusive?",
+    "gt_key": "n_days_grasim_h1_2025"
+  },
+  "result": {
+    "task_id": "T06",
+    "tier": "timewindow",
+    "question": "How many trading days does the database hold for ticker 'GRASIM' between 2025-01-01 and 2025-06-30 inclusive?",
+    "answer_type": "integer",
+    "config": {
+      "label": "abl_schema_in_prompt",
+      "schema_mode": "prompt",
+      "retry_on_sql_error": true,
+      "max_steps": 8
+    },
+    "model": "claude-haiku-4-5-20251001",
+    "provider": "claude-cli",
+    "value": 123,
+    "cited_sql": "SELECT COUNT(*) as trading_days FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id WHERE i.ticker = 'GRASIM' AND p.date >= '2025-01-01' AND p.date <= '2025-06-30'",
+    "claimed_unanswerable": false,
+    "refusal_reason": null,
+    "outcome": "answered",
+    "steps_used": 2,
+    "tool_calls": 1,
+    "sql_calls": 1,
+    "sql_errors": 0,
+    "blocked_calls": 0,
+    "retries": 0,
+    "protocol_violations": 0,
+    "transport_retries": 0,
+    "rate_limit_hits": 0,
+    "prompt_tokens": 1283,
+    "completion_tokens": 1244,
+    "cache_write_tokens": 2203,
+    "cache_read_tokens": 42959,
+    "cost_usd_measured": 0.0162049,
+    "cost_usd_agent": 0.007503,
+    "cost_usd_cache": 0.0087019,
+    "latency_s": 21.938051650999796,
+    "llm_latency_s": 21.93689257999995,
+    "error": null,
+    "transcript": [
+      {
+        "step": 1,
+        "llm": {
+          "text": "{\"thought\": \"Count trading days for GRASIM between 2025-01-01 and 2025-06-30 by querying the prices table joined with instruments.\", \"tool\": \"run_sql\", \"args\": {\"query\": \"SELECT COUNT(*) as trading_days FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id WHERE i.ticker = 'GRASIM' AND p.date >= '2025-01-01' AND p.date <= '2025-06-30'\"}}",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 589,
+          "completion_tokens": 987,
+          "cache_write_tokens": 1281,
+          "cache_read_tokens": 28909,
+          "cost_usd_measured": 0.010976900000000001,
+          "cost_usd_agent": 0.005524,
+          "latency_s": 15.357028152000112,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Count trading days for GRASIM between 2025-01-01 and 2025-06-30 by querying the prices table joined with instruments.",
+          "tool": "run_sql",
+          "args": {
+            "query": "SELECT COUNT(*) as trading_days FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id WHERE i.ticker = 'GRASIM' AND p.date >= '2025-01-01' AND p.date <= '2025-06-30'"
+          }
+        },
+        "tool_result": {
+          "columns": [
+            "trading_days"
+          ],
+          "rows": [
+            [
+              123
+            ]
+          ],
+          "row_count": 1
+        }
+      },
+      {
+        "step": 2,
+        "llm": {
+          "text": "```json\n{\n  \"thought\": \"Query returned the count of trading days for GRASIM in the specified date range.\",\n  \"final\": {\n    \"value\": 123,\n    \"sql\": \"SELECT COUNT(*) as trading_days FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id WHERE i.ticker = 'GRASIM' AND p.date >= '2025-01-01' AND p.date <= '2025-06-30'\"\n  }\n}\n```",
+          "model": "claude-haiku-4-5-20251001",
+          "prompt_tokens": 694,
+          "completion_tokens": 257,
+          "cache_write_tokens": 922,
+          "cache_read_tokens": 14050,
+          "cost_usd_measured": 0.005228,
+          "cost_usd_agent": 0.001979,
+          "latency_s": 6.579864427999837,
+          "error": null
+        },
+        "parsed": {
+          "thought": "Query returned the count of trading days for GRASIM in the specified date range.",
+          "final": {
+            "value": 123,
+            "sql": "SELECT COUNT(*) as trading_days FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id WHERE i.ticker = 'GRASIM' AND p.date >= '2025-01-01' AND p.date <= '2025-06-30'"
+          }
+        }
+      }
+    ],
+    "tool_call_log": [
+      {
+        "tool": "run_sql",
+        "args": {
+          "query": "SELECT COUNT(*) as trading_days FROM prices p JOIN instruments i ON p.instrument_id = i.instrument_id WHERE i.ticker = 'GRASIM' AND p.date >= '2025-01-01' AND p.date <= '2025-06-30'"
+        },
+        "ok": true,
+        "note": "1 rows"
+      }
+    ]
+  },
+  "grade": {
+    "task_id": "T06",
+    "tier": "timewindow",
+    "expected": 123,
+    "got": 123,
+    "coerced": false,
+    "detail": "",
+    "verdict": "correct",
+    "correct": true
+  }
+}
