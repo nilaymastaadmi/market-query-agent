@@ -1,0 +1,3 @@
+{
+  "_README": "Hand-assigned failure classifications. Key is '<config_label>:<task_id>'. Each entry has a 'category' from TAXONOMY in classify_failures.py and a 'note' saying what in the episode log decided it. Populated by reading results/runs/<config>/<id>.json, not by running a heuristic -- see the docstring in eval/classify_failures.py for why."
+}
