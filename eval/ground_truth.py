@@ -175,9 +175,11 @@ def compute_all() -> dict:
     g["sector_highest_avg_close"] = str(sector_avg.idxmax())
     large = set(u.loc[u["cap_tier"] == "LARGE", "ticker"])
     g["avg_close_large_cap"] = float(p[p["ticker"].isin(large)]["close"].mean())
-    g["sector_group_most_instruments"] = str(
-        u.groupby("sector_group")["ticker"].count().idxmax()
-    )
+    # Explicit tie-break: Materials and Financials both hold 5 instruments, so
+    # idxmax() would return whichever pandas happened to see first and the
+    # question would have two correct answers. The question states the rule.
+    _grp = u.groupby("sector_group")["ticker"].count()
+    g["sector_group_most_instruments"] = str(sorted(_grp[_grp == _grp.max()].index)[0])
     g["total_volume_it_services"] = float(
         p[p["sector"] == "IT_Services"]["volume"].sum()
     )
@@ -278,6 +280,8 @@ def self_check(g: dict) -> list:
 
     check(g["n_instruments"] == 28, f"expected 28 instruments, got {g['n_instruments']}")
     check(g["n_sectors"] == 14, f"expected 14 sectors, got {g['n_sectors']}")
+    check(g["sector_group_most_instruments"] == "Financials",
+          "tie-break for sector_group_most_instruments changed unexpectedly")
     check(g["min_date"] == "2023-01-02", f"unexpected min_date {g['min_date']}")
     check(g["sector_of_tcs"] == "IT_Services", f"TCS sector {g['sector_of_tcs']}")
     check(-1.0 < g["max_drawdown_spandana"] < 0.0, "drawdown must be in (-1, 0)")
