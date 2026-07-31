@@ -136,9 +136,12 @@ def ablation_deltas(summaries):
         "abl_no_retry": "first SQL error ends the episode; the agent never "
                         "sees the database's message",
     }
+    missing = []
     for c in ["abl_schema_in_prompt", "abl_no_retry"]:
         s = summaries.get(c)
         if not s:
+            missing.append(c)
+            out.append(f"| {c} | {what[c]} | not run | - | - | - | - |")
             continue
         m = s["metrics"]
         d = m["accuracy_overall"] - b["accuracy_overall"]
@@ -147,6 +150,29 @@ def ablation_deltas(summaries):
             f"{'+' if d >= 0 else ''}{100 * d:.1f} pp | "
             f"{m['mean_tool_calls']:.2f} | ${m['mean_cost_usd_agent']:.5f} | "
             f"{pct(m['retry_rate'], 1)} |"
+        )
+
+    # A missing ablation is a reportable fact, not a blank cell. If the
+    # baseline never exercised the mechanism an ablation removes, that
+    # ablation cannot measure anything and we say so with the evidence.
+    if "abl_no_retry" in missing:
+        out.append("")
+        out.append(
+            f"**Why `abl_no_retry` was not run.** The retry mechanism is only "
+            f"reachable when the agent writes SQL the database rejects. In the "
+            f"`main` run retry was **enabled** "
+            f"(`retry_on_sql_error = {base['manifest']['config'].get('retry_on_sql_error')}`) "
+            f"and the agent produced "
+            f"**{b['total_sql_errors']} SQL errors across {b['n_tasks']} tasks** "
+            f"({pct(b['retry_rate'], 1)} retry rate, "
+            f"{b['tasks_with_at_least_one_sql_error']} tasks with at least one "
+            f"error). The retry path therefore never executed once. Disabling "
+            f"an inactive code path cannot change behaviour, so any accuracy "
+            f"delta from this ablation would be model nondeterminism, not an "
+            f"ablation effect, and reporting it as one would be a measurement "
+            f"claim this project does not support. The ablation is kept in the "
+            f"table rather than deleted, because *the baseline never wrote "
+            f"invalid SQL* is itself the finding."
         )
     return "\n".join(out)
 
@@ -186,21 +212,63 @@ def overhead_note():
     )
 
 
-def latency_note():
+def latency_note(summaries=None):
+    """Report latency honestly, driven by each run's recorded `workers`.
+
+    A dedicated serial run is only needed when the baseline itself ran with
+    concurrency. If `main` already ran at --workers 1 its latency is already
+    uncontended and a separate serial run would measure nothing new.
+    """
     p = os.path.join(RESULTS, "summary_main_serial.json")
-    if not os.path.exists(p):
+    if os.path.exists(p):
+        with open(p) as f:
+            s = json.load(f)
+        m = s["metrics"]
+        return (
+            f"Serial reference (`--workers 1`, {m['n_tasks']} tasks from the "
+            f"timewindow tier): mean **{m['mean_latency_s']:.1f}s** per task, "
+            f"median {m['median_latency_s']:.1f}s, mean {m['mean_steps']:.2f} "
+            f"model steps. Use these rather than the parallel-run latencies "
+            f"when comparing against another system."
+        )
+
+    summaries = summaries or {}
+    base = summaries.get("main")
+    if not base:
+        return "_no main run found_"
+
+    w = base["manifest"].get("workers")
+    if w != 1:
         return ("_no serial run found; latency figures above are from the "
                 "parallel run and are inflated by worker contention_")
-    with open(p) as f:
-        s = json.load(f)
-    m = s["metrics"]
-    return (
-        f"Serial reference (`--workers 1`, {m['n_tasks']} tasks from the "
-        f"timewindow tier): mean **{m['mean_latency_s']:.1f}s** per task, median "
-        f"{m['median_latency_s']:.1f}s, mean {m['mean_steps']:.2f} model steps. "
-        f"Use these rather than the parallel-run latencies when comparing "
-        f"against another system."
-    )
+
+    lines = [
+        f"The `main` run was executed at `--workers {w}`, so its latency "
+        f"figures are **already uncontended** and no separate serial run is "
+        f"needed. Quote main's latency when comparing against another system."
+    ]
+
+    # Cross-config latency comparisons are only fair at equal worker counts.
+    others = [(c, s) for c, s in summaries.items()
+              if c != "main" and s
+              and s.get("manifest", {}).get("workers") not in (None, 1)]
+    if others:
+        detail = ", ".join(
+            f"`{c}` at `--workers {s['manifest']['workers']}` "
+            f"({s['metrics']['mean_latency_s']:.1f}s)"
+            for c, s in sorted(others)
+        )
+        lines.append(
+            f"Other configurations did not run at the same concurrency: "
+            f"{detail}, against main's "
+            f"{base['metrics']['mean_latency_s']:.1f}s at `--workers 1`. "
+            f"Contention can only *inflate* a per-task latency, so where a "
+            f"higher-concurrency config is nonetheless **faster** than main, "
+            f"that gap is a conservative floor on the real speed-up rather "
+            f"than an artefact. Cross-config latency should still not be read "
+            f"as a like-for-like measurement."
+        )
+    return " ".join(lines)
 
 
 def main():
@@ -221,7 +289,7 @@ def main():
         "ablations": ("Ablations", ablation_deltas(summaries)),
         "injection": ("Prompt injection probes", injection_table(summaries)),
         "overhead": ("Transport overhead", overhead_note()),
-        "latency": ("Latency reference", latency_note()),
+        "latency": ("Latency reference", latency_note(summaries)),
     }
     if args.section != "all":
         print(sections[args.section][1])

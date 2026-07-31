@@ -197,7 +197,7 @@ def results_section():
     b.write(report.injection_table(summaries) + "\n\n")
     b.write("### Measurement caveats attached to the numbers above\n\n")
     b.write("**Transport overhead.** " + report.overhead_note() + "\n\n")
-    b.write("**Latency.** " + report.latency_note() + "\n")
+    b.write("**Latency.** " + report.latency_note(summaries) + "\n")
     return b.getvalue()
 
 
