@@ -9,7 +9,7 @@ task success rate, cost per task, and a taxonomy of how it fails. That is what
 this repository is for. Where a choice existed between a more capable agent and
 a more rigorous evaluation, the evaluation won.
 
-**Read `METHODOLOGY.md` before the results below.** Method is stated there
+**Read [`METHODOLOGY.md`](METHODOLOGY.md) before the results below.** Method is stated there
 before any number appears here, so the results cannot be reverse-engineered into
 a method that flatters them.
 
